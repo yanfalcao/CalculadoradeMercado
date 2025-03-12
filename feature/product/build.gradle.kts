@@ -34,7 +34,6 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(libs.androidx.navigation)
-            implementation(compose.preview)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

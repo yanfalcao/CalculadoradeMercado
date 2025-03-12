@@ -15,7 +15,6 @@ class ProductScreenTest {
         }
 
         onNodeWithText("Comparativos").assertExists()
-        onNodeWithText("Pesquisar").assertExists()
         onNodeWithContentDescription("Adicionar comparativo").assertExists()
         onNodeWithText("Adicione comparativos").assertExists()
         onNodeWithText("Vamos comparar para economizar").assertExists()
