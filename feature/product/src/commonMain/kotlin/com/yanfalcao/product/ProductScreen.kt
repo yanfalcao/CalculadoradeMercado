@@ -23,9 +23,13 @@ import com.yanfalcao.product.widget.ComparativeListItem
 import com.yanfalcao.product.widget.CustomSearchBar
 import com.yanfalcao.product.widget.FloatingButton
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
-fun ProductRoute() {
+fun ProductRoute(
+    viewModel: ProductViewModel = koinViewModel()
+) {
     ProductScreen()
 }
 
