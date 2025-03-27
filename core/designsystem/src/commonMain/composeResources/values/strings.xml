@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cd_edit_button">Editar</string>
+    <string name="cd_delete_button">Deletar</string>
+</resources>
