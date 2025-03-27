@@ -36,6 +36,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(project(":core:designsystem"))
+            implementation(project(":core:database"))
             implementation(project(":feature:product"))
             implementation(compose.runtime)
             implementation(compose.foundation)
