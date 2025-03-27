@@ -1,9 +1,9 @@
-package com.yanfalcao.designsystem.navigation
+package com.yanfalcao.product.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.yanfalcao.designsystem.ProductRoute
+import com.yanfalcao.product.ProductRoute
 
 const val PRODUCT_ROUTE = "product_screen"
 

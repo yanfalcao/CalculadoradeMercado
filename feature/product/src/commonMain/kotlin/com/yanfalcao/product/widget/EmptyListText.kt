@@ -1,4 +1,4 @@
-package com.yanfalcao.designsystem.widget
+package com.yanfalcao.product.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

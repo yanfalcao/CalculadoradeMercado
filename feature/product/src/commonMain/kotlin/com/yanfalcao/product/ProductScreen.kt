@@ -1,6 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 
-package com.yanfalcao.designsystem
+package com.yanfalcao.product
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.product.generated.resources.Res
 import calculadorademercado.feature.product.generated.resources.comparatives
-import com.yanfalcao.designsystem.widget.CustomSearchBar
-import com.yanfalcao.designsystem.widget.EmptyListText
-import com.yanfalcao.designsystem.widget.FloatingButton
+import com.yanfalcao.product.widget.ComparativeListItem
+import com.yanfalcao.product.widget.CustomSearchBar
+import com.yanfalcao.product.widget.FloatingButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

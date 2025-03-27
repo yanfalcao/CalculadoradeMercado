@@ -1,4 +1,4 @@
-package com.yanfalcao.designsystem.widget
+package com.yanfalcao.product.widget
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

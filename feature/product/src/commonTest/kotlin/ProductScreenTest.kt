@@ -4,7 +4,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.runComposeUiTest
-import com.yanfalcao.designsystem.ProductScreen
+import com.yanfalcao.product.ProductScreen
 import kotlin.test.Test
 
 class ProductScreenTest {
