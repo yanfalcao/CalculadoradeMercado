@@ -13,12 +13,10 @@ data class ProductEntity(
     @PrimaryKey
     val id: String = Uuid.random().toString(),
     val name: String,
-    @ColumnInfo("measurement_unit")
-    val measurementUnit: String,
-    @ColumnInfo("comparison_size")
-    val comparisonSize: Float,
-    @ColumnInfo("comparison_unit")
-    val comparisonUnit: String,
+    val entity: String,
+    val measure: Float,
+    @ColumnInfo("base_unit")
+    val baseUnit: String,
     @ColumnInfo("created_at")
     val createdAt: Long,
 )

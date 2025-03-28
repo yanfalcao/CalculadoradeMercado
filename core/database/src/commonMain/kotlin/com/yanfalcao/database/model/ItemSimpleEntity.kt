@@ -17,5 +17,5 @@ data class ItemSimpleEntity(
     val name: String,
     @ColumnInfo("unit_price")
     val unitPrice: Float,
-    val quantity: Int,
+    val amount: Int,
 )

@@ -20,7 +20,8 @@ data class ItemComparisonEntity(
     val store: String?,
     @ColumnInfo("unit_price")
     val unitPrice: Float,
-    val quantity: Int,
-    val unit: String,
-    val size: Float,
+    val amount: Int,
+    @ColumnInfo("base_unit")
+    val baseUnit: String,
+    val measure: Float,
 )

@@ -24,6 +24,7 @@ ksp = "2.0.21-1.0.25"
 sqlite = "2.5.0-SNAPSHOT"
 androidx-room = "2.7.0-rc03"
 identityJvm = "202411.1"
+jetbrainsKotlinJvm = "1.9.24"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -65,3 +66,4 @@ kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", versio
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "androidx-room" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }

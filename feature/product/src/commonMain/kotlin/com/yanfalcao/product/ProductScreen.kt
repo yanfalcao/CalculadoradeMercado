@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
+@file:OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.yanfalcao.product
 
