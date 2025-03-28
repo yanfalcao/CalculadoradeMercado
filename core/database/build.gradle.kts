@@ -24,6 +24,7 @@ kotlin {
         it.binaries.framework {
             baseName = "database"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -72,5 +73,6 @@ android {
 
 dependencies {
     implementation(libs.identity.jvm)
-    ksp(libs.androidx.room.compiler)
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
 }

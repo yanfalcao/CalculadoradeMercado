@@ -10,4 +10,11 @@ abstract class BaseUnits(
     val baseUnitName: String,
     val abbreviation: String,
     val ratio: Double = 1.0
-)
+) {
+    fun entityName(): String = this::class.simpleName!!
+}
+
+interface BaseUnitUtil {
+    fun isUnit(entity: String): Boolean
+    fun getUnit(baseUnitName: String): BaseUnits
+}

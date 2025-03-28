@@ -1,9 +1,9 @@
+import com.yanfalcao.model.util.Length.Companion.kilometers
+import com.yanfalcao.model.util.Length.Companion.miles
 import com.yanfalcao.model.util.Length.Companion.centimeters
 import com.yanfalcao.model.util.Length.Companion.feet
 import com.yanfalcao.model.util.Length.Companion.inches
-import com.yanfalcao.model.util.Length.Companion.kilometers
 import com.yanfalcao.model.util.Length.Companion.meters
-import com.yanfalcao.model.util.Length.Companion.miles
 import com.yanfalcao.model.util.times
 import kotlin.test.Test
 import kotlin.test.assertEquals

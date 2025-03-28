@@ -20,11 +20,12 @@ composeTest = "1.6.8"
 navigation = "2.8.0-alpha10"
 koin = "3.6.0-Beta4"
 koinComposeMultiplatform = "1.2.0-Beta4"
-ksp = "2.0.21-1.0.25"
+ksp = "2.1.0-1.0.29"
 sqlite = "2.5.0-SNAPSHOT"
 androidx-room = "2.7.0-rc03"
 identityJvm = "202411.1"
 jetbrainsKotlinJvm = "1.9.24"
+datetime = "0.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,6 +45,8 @@ assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assert
 compose-ui-test-junit4-android = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "composeTest" }
 compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeTest" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtx" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
