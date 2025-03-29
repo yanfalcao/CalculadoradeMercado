@@ -1,5 +1,6 @@
 package org.yanfalcao.calculadorademercado.di
 
+import com.yanfalcao.data.di.dataModule
 import com.yanfalcao.database.di.databaseModule
 import com.yanfalcao.product.di.productModule
 import org.koin.core.context.startKoin
@@ -10,7 +11,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         config?.invoke(this)
         modules(
             productModule,
-            databaseModule
+            databaseModule,
+            dataModule
         )
     }
 }

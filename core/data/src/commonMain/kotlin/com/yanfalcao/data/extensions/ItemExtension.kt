@@ -2,7 +2,6 @@ package com.yanfalcao.data.extensions
 
 import com.yanfalcao.database.model.ItemComparisonEntity
 import com.yanfalcao.database.model.ItemSimpleEntity
-import com.yanfalcao.model.Item
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.ItemSimple
 import com.yanfalcao.model.util.Length
@@ -18,7 +17,7 @@ fun ItemSimple.toEntity(cartId: String): ItemSimpleEntity {
     )
 }
 
-fun ItemSimpleEntity.toModel(): Item {
+fun ItemSimpleEntity.toModel(): ItemSimple {
     return ItemSimple(
         id = this.id,
         name = this.name,
@@ -27,7 +26,7 @@ fun ItemSimpleEntity.toModel(): Item {
     )
 }
 
-fun ItemComparison.toEntity(productId: String, cartId: String?): ItemComparisonEntity {
+fun ItemComparison.toEntity(productId: String, cartId: String? = null): ItemComparisonEntity {
     return ItemComparisonEntity(
         id = this.id,
         productId = productId,
@@ -41,8 +40,7 @@ fun ItemComparison.toEntity(productId: String, cartId: String?): ItemComparisonE
     )
 }
 
-// Extension function to convert ItemComparisonEntity to ItemComparison
-fun ItemComparisonEntity.toModel(entity: String): Item {
+fun ItemComparisonEntity.toModel(entity: String): ItemComparison {
     val baseUnits = try {
         when {
             Length.isUnit(entity) -> Length.getUnit(this.baseUnit)
