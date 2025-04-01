@@ -18,7 +18,7 @@ fun App() {
             navController = navController,
             startDestination = PRODUCT_ROUTE
         ) {
-            productScreen()
+            productScreen(navigateToProductDetail = {})
         }
     }
 }

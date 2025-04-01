@@ -12,9 +12,11 @@ import calculadorademercado.feature.product.generated.resources.cd_add_floating_
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FloatingButton() {
+fun FloatingButton(
+    onClick: () -> Unit
+) {
     FloatingActionButton(
-        onClick = {  },
+        onClick = onClick,
         shape = CircleShape,
         containerColor = MaterialTheme.colorScheme.primary,
     ) {

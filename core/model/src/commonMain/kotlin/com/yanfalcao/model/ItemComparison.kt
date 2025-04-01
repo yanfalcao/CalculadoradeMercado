@@ -1,13 +1,17 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.yanfalcao.model
 
 import com.yanfalcao.model.util.Measure
 import com.yanfalcao.model.util.BaseUnits
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 data class ItemComparison(
-    override val id: String,
+    override val id: String = Uuid.random().toString(),
     override val unitPrice: Float,
     override val amount: Int,
     val brand: String,
-    val store: String?,
+    val store: String? = null,
     val measure: Measure<BaseUnits>,
 ) : Item

@@ -23,8 +23,11 @@ fun NavController.navigateToProduct(popUp: Boolean = false) {
 }
 
 fun NavGraphBuilder.productScreen(
+    navigateToProductDetail: (String?) -> Unit
 ) {
     composable(route = PRODUCT_ROUTE) {
-        ProductRoute()
+        ProductRoute(
+            navigateToProductDetail = navigateToProductDetail
+        )
     }
 }

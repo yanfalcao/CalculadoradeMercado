@@ -18,20 +18,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.TextFieldValue
+import com.yanfalcao.product.state.ProductIntent
+import com.yanfalcao.product.state.ProductViewState
 
 @Composable
 fun CustomSearchBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    handleIntent: (ProductIntent) -> Unit,
+    state: ProductViewState,
 ) {
     val searchText = remember { mutableStateOf(TextFieldValue()) }
+
+    if(state.clearFilter) {
+        searchText.value = TextFieldValue()
+    }
 
     BasicTextField(
         value = searchText.value,
         onValueChange = { newText ->
             searchText.value = newText
+            handleIntent(ProductIntent.FilterProducts(newText.text))
         },
         modifier =
         modifier
