@@ -4,23 +4,28 @@ import com.yanfalcao.data.extensions.toEntity
 import com.yanfalcao.data.extensions.toModel
 import com.yanfalcao.database.dao.ItemComparisonDao
 import com.yanfalcao.database.dao.ProductDao
+import com.yanfalcao.database.model.ProductRelation
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 internal class DefaultProductRepository(
     private val productDao: ProductDao,
     private val itemComparisonDao: ItemComparisonDao
 ): ProductRepository {
-    override fun findProducts(): List<Product> {
+    override fun findProducts(): Flow<List<Product>> {
         return productDao.findAll()
-            .map { productDatabase ->
-                val itemList: List<ItemComparison> = productDatabase.itemComparison
-                    .map { item ->
-                        val measurementEntity = productDatabase.product.entity
-                        item.toModel(measurementEntity)
-                    }
+            .map { productRelationList ->
+                mapToProductList(productRelationList)
+            }
+    }
 
-                productDatabase.product.toModel(itemList)
+    override fun findProductsByName(name: String): List<Product> {
+        return productDao.findByName(name)
+            .map { productRelationList ->
+                val itemList = mapToItemComparisonList(productRelationList)
+                productRelationList.product.toModel(itemList)
             }
     }
 
@@ -50,4 +55,21 @@ internal class DefaultProductRepository(
 
         productDao.insert(product.toEntity())
     }
+
+    private fun mapToItemComparisonList(productRelation: ProductRelation): List<ItemComparison> {
+        return productRelation.itemComparison
+            .map { item ->
+                val measurementEntity = productRelation.product.entity
+                item.toModel(measurementEntity)
+            }
+    }
+
+    private fun mapToProductList(productRelationList: List<ProductRelation>): List<Product> {
+        return productRelationList
+            .map { productRelation ->
+                val itemList = mapToItemComparisonList(productRelation)
+                productRelation.product.toModel(itemList)
+            }
+    }
+
 }
