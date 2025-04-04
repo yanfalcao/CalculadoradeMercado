@@ -5,6 +5,7 @@ import com.yanfalcao.database.model.ItemSimpleEntity
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.ItemSimple
 import com.yanfalcao.model.util.Length
+import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.Measure
 
 fun ItemSimple.toEntity(cartId: String): ItemSimpleEntity {
@@ -44,6 +45,7 @@ fun ItemComparisonEntity.toModel(entity: String): ItemComparison {
     val baseUnits = try {
         when {
             Length.isUnit(entity) -> Length.getUnit(this.baseUnit)
+            Mass.isUnit(entity) -> Mass.getUnit(this.baseUnit)
             else -> Length.meters
         }
     } catch (e: IllegalArgumentException) {

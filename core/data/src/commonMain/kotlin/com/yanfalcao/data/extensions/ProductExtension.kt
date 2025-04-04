@@ -4,6 +4,7 @@ import com.yanfalcao.database.model.ProductEntity
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
 import com.yanfalcao.model.util.Length
+import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.Measure
 import kotlinx.datetime.Instant
 
@@ -22,6 +23,7 @@ fun ProductEntity.toModel(itens: List<ItemComparison>): Product {
     val baseUnits = try {
         when {
             Length.isUnit(this.entity) -> Length.getUnit(this.baseUnit)
+            Mass.isUnit(this.entity) -> Mass.getUnit(this.baseUnit)
             else -> Length.meters
         }
     } catch (e: IllegalArgumentException) {
