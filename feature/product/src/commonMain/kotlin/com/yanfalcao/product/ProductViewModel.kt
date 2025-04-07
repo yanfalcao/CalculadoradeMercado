@@ -9,6 +9,7 @@ import com.yanfalcao.designsystem.util.EventManager.AppEvent
 import com.yanfalcao.model.Product
 import com.yanfalcao.product.state.ProductIntent
 import com.yanfalcao.product.state.ProductViewState
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
     private val _productViewState = MutableStateFlow(ProductViewState())
     val productViewState: StateFlow<ProductViewState> = _productViewState
@@ -34,12 +36,12 @@ class ProductViewModel(
             is ProductIntent.OpenProductToCreate -> openProductToCreate()
             is ProductIntent.CreateProduct -> createProduct(intent.product)
             is ProductIntent.UndoAction -> undoAction()
-            is ProductIntent.RemoveLastUndo -> _productViewState.value = _productViewState.value.copy(undoQueue = mutableListOf())
+            is ProductIntent.RemoveLastUndo -> removeUndoAction()
         }
     }
 
     private fun loadProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             _productViewState.value = _productViewState.value.copy(isLoading = true)
 
             productRepository.findProducts().collect { products ->
@@ -53,7 +55,7 @@ class ProductViewModel(
     }
 
     private fun filterProducts(text: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val products = productRepository.findProductsByName(name = text)
 
             _productViewState.value = _productViewState.value.copy(
@@ -65,7 +67,7 @@ class ProductViewModel(
     }
 
     private fun undoAction() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val undoQueue = _productViewState.value.undoQueue
             if (undoQueue.isNotEmpty()) {
                 val lastIntent = undoQueue.removeLast()
@@ -75,16 +77,16 @@ class ProductViewModel(
     }
 
     private fun removeUndoAction() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val undoQueue = _productViewState.value.undoQueue
             if (undoQueue.isNotEmpty()) {
-                val lastIntent = undoQueue.removeLast()
+                undoQueue.removeLast()
             }
         }
     }
 
     private fun removeProduct(product: Product) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             productRepository.removeProduct(product)
 
             _productViewState.value.undoQueue.add(
@@ -96,7 +98,7 @@ class ProductViewModel(
     }
 
     private fun createProduct(product: Product) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             productRepository.saveProduct(product)
         }
     }

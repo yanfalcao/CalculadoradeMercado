@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -55,6 +56,7 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
             implementation(libs.assertk)
+            implementation(libs.turbine)
 
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
