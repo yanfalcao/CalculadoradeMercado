@@ -21,6 +21,14 @@ internal class DefaultProductRepository(
             }
     }
 
+    override fun findProductById(id: String): Flow<Product> {
+        return productDao.findById(id)
+            .map { productRelationList ->
+                val itemList = mapToItemComparisonList(productRelationList)
+                productRelationList.product.toModel(itemList)
+            }
+    }
+
     override fun findProductsByName(name: String): List<Product> {
         return productDao.findByName(name)
             .map { productRelationList ->
@@ -47,13 +55,7 @@ internal class DefaultProductRepository(
     }
 
     override fun updateProduct(product: Product) {
-        product.itens
-            .forEach { item ->
-                val productId = product.id
-                itemComparisonDao.insert(item.toEntity(productId))
-            }
-
-        productDao.insert(product.toEntity())
+        productDao.update(product.toEntity())
     }
 
     private fun mapToItemComparisonList(productRelation: ProductRelation): List<ItemComparison> {

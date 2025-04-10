@@ -6,6 +6,8 @@ import androidx.navigation.compose.rememberNavController
 import com.yanfalcao.product.navigation.PRODUCT_ROUTE
 import com.yanfalcao.designsystem.theme.AppTheme
 import com.yanfalcao.product.navigation.productScreen
+import com.yanfalcao.productDetails.navigation.navigateToProductDetails
+import com.yanfalcao.productDetails.navigation.productDetailsScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -18,7 +20,12 @@ fun App() {
             navController = navController,
             startDestination = PRODUCT_ROUTE
         ) {
-            productScreen(navigateToProductDetail = {})
+            productScreen(
+                navigateToProductDetail = navController::navigateToProductDetails
+            )
+            productDetailsScreen(
+                onBack = navController::popBackStack
+            )
         }
     }
 }

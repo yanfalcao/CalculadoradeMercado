@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {
     fun findProducts(): Flow<List<Product>>
+    fun findProductById(id: String): Flow<Product>
     fun findProductsByName(name: String): List<Product>
     fun saveProduct(product: Product)
     fun removeProduct(product: Product)

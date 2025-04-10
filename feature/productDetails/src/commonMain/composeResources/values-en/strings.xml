@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="product">Product</string>
+    <string name="placeholder_name">Type the product name</string>
+    <string name="cd_edit_button">Edit comparative</string>
+    <string name="cd_delete_button">Delete comparative</string>
+    <string name="cd_floating_button">Product actions</string>
+    <string name="cd_back_button">Back</string>
+    <string name="empty_list_title">Add items</string>
+    <string name="empty_list">Let's compare to save</string>
+    <string name="snackbar_delete">Comparative deleted</string>
+    <string name="undo">Undo</string>
+    <plurals name="items_quantity">
+        <item quantity="zero">No items</item>
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="mass">Mass</string>
+    <string name="length">Length</string>
+    <string name="volume">Volume</string>
+</resources>
