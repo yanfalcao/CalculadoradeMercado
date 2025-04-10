@@ -15,3 +15,15 @@ fun Product.copyBaseUnitComparison(
         )
     )
 }
+
+fun Product.copyAmountComparison(
+    amount: String
+): Product {
+    return this.copy(
+        id = this.id,
+        measureComparison = Measure(
+            units = this.measureComparison.units,
+            amount = amount.toDouble()
+        )
+    )
+}

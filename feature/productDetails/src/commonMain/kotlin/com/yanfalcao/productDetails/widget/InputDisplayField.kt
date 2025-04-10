@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,40 +19,28 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.yanfalcao.productDetails.state.ProductDetailsIntent
-import com.yanfalcao.productDetails.state.ProductDetailsVS
 
 @Composable
 fun InputDisplayField(
     modifier: Modifier = Modifier,
     label: String,
-    handleIntent: (ProductDetailsIntent) -> Unit,
-    state: ProductDetailsVS,
+    onChange: (String) -> Unit,
+    textState: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     val inputText = remember { mutableStateOf("") }
 
-    if (state.product.name.isNotEmpty()) {
-        inputText.value = state.product.name
+    if (textState.isNotEmpty()) {
+        inputText.value = textState
     }
 
     BasicTextField(
         value = inputText.value,
         onValueChange = { newText ->
             inputText.value = newText
-            if (newText.isNotEmpty()) {
-                handleIntent(
-                    ProductDetailsIntent.UpdateProduct(
-                        state.product.copy(name = newText)
-                    )
-                )
-            } else {
-                handleIntent(
-                    ProductDetailsIntent.EditProduct(
-                        state.product.copy(name = newText)
-                    )
-                )
-            }
+            onChange(newText)
         },
+        keyboardOptions = keyboardOptions,
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surface,

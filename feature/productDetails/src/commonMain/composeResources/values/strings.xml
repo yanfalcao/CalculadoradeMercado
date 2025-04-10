@@ -2,6 +2,7 @@
 <resources>
     <string name="product">Product</string>
     <string name="placeholder_name">Digite o nome do produto</string>
+    <string name="placeholder_amount">Digite a quantidade</string>
     <string name="cd_edit_button">Editar comparativo</string>
     <string name="cd_delete_button">Deletar comparativo</string>
     <string name="cd_floating_button">Ações do produto</string>
@@ -10,12 +11,38 @@
     <string name="empty_list">Vamos comparar para economizar</string>
     <string name="snackbar_delete">Comparativo deletado</string>
     <string name="undo">Desfazer</string>
+    <string name="title_comparison_unit">Unidade de Comparação</string>
     <plurals name="items_quantity">
         <item quantity="zero">%1$d item</item>
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d itens</item>
     </plurals>
+
+    // Entity
     <string name="mass">Massa</string>
     <string name="length">Comprimento</string>
     <string name="volume">Volume</string>
+
+    // Length unit
+    <string name="length_mile">Milha (mi)</string>
+    <string name="lenght_millimeter">Milímetro (mm)</string>
+    <string name="length_centimeter">Centímetro (cm)</string>
+    <string name="length_meter">Metro (m)</string>
+    <string name="length_inch">Polegada (in)</string>
+    <string name="length_foot">Pé (ft)</string>
+    <string name="lenght_kilometer">Quilômetro (km)</string>
+
+    // Mass unit
+    <string name="mass_kilogram">Quilograma (kg)</string>
+    <string name="mass_gram">Grama (g)</string>
+    <string name="mass_milligram">Miligrama (mg)</string>
+    <string name="mass_ounce">Onça (oz)</string>
+    <string name="mass_pound">Libra (lb)</string>
+
+    // Volume unit
+    <string name="volume_liter">Litro (l)</string>
+    <string name="volume_milliliter">Mililitro (mL)</string>
+    <string name="volume_gallon">Galão (gal)</string>
+    <string name="volume_fluid_ounce">Onça fluida (fl oz)</string>
+    <string name="volume_pint">Pinta (pt)</string>
 </resources>

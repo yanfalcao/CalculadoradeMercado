@@ -2,6 +2,7 @@
 <resources>
     <string name="product">Product</string>
     <string name="placeholder_name">Type the product name</string>
+    <string name="placeholder_amount">Type the amount</string>
     <string name="cd_edit_button">Edit comparative</string>
     <string name="cd_delete_button">Delete comparative</string>
     <string name="cd_floating_button">Product actions</string>
@@ -10,12 +11,38 @@
     <string name="empty_list">Let's compare to save</string>
     <string name="snackbar_delete">Comparative deleted</string>
     <string name="undo">Undo</string>
+    <string name="title_comparison_unit">Comparison Unit</string>
     <plurals name="items_quantity">
         <item quantity="zero">No items</item>
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
     </plurals>
+
+    // Entity
     <string name="mass">Mass</string>
     <string name="length">Length</string>
     <string name="volume">Volume</string>
+
+    // Length unit
+    <string name="length_mile">Mile (mi)</string>
+    <string name="lenght_millimeter">Millimeter (mm)</string>
+    <string name="length_centimeter">Centimeter (cm)</string>
+    <string name="length_meter">Meter (m)</string>
+    <string name="length_inch">Inch (in)</string>
+    <string name="length_foot">Feet (ft)</string>
+    <string name="lenght_kilometer">Kilometer (km)</string>
+
+    // Mass unit
+    <string name="mass_kilogram">Kilogram (Kg)</string>
+    <string name="mass_gram">Gram (g)</string>
+    <string name="mass_milligram">Milligram (mg)</string>
+    <string name="mass_ounce">Ounce (oz)</string>
+    <string name="mass_pound">Pound (lb)</string>
+
+    // Volume unit
+    <string name="volume_liter">Liter (l)</string>
+    <string name="volume_milliliter">Milliliter (mL)</string>
+    <string name="volume_gallon">Gallon (gal)</string>
+    <string name="volume_fluid_ounce">Fluid Ounce (fl oz)</string>
+    <string name="volume_pint">Pint (pt)</string>
 </resources>

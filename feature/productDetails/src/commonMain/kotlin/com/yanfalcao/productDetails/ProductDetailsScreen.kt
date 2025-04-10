@@ -35,6 +35,7 @@ import com.yanfalcao.productDetails.extensions.getDropItem
 import com.yanfalcao.productDetails.widget.FloatingButton
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
+import com.yanfalcao.productDetails.widget.ComparisonUnitSection
 import com.yanfalcao.productDetails.widget.CustomTopBar
 import com.yanfalcao.productDetails.widget.DropdownField
 import com.yanfalcao.productDetails.widget.EmptyListText
@@ -129,8 +130,22 @@ fun ProductDetailsScreen(
                 InputDisplayField(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(Res.string.placeholder_name),
-                    handleIntent = handleIntent,
-                    state = state,
+                    onChange = { text ->
+                        if (text.isNotEmpty()) {
+                            handleIntent(
+                                ProductDetailsIntent.UpdateProduct(
+                                    state.product.copy(name = text)
+                                )
+                            )
+                        } else {
+                            handleIntent(
+                                ProductDetailsIntent.EditProduct(
+                                    state.product.copy(name = text)
+                                )
+                            )
+                        }
+                    },
+                    textState = state.product.name,
                 )
             }
 
@@ -144,6 +159,13 @@ fun ProductDetailsScreen(
                             product = state.product.copyBaseUnitComparison(item.baseUnit)
                         ))
                     }
+                )
+            }
+
+            item {
+                ComparisonUnitSection(
+                    state = state,
+                    handleIntent = handleIntent,
                 )
             }
 
