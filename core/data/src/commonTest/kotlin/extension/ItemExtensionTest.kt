@@ -23,7 +23,7 @@ class ItemExtensionTest {
         val itemSimple = ItemSimple(
             id = "1",
             name = "Sample Item",
-            unitPrice = 10.0f,
+            totalPrice = 10.0f,
             amount = 2
         )
 
@@ -34,7 +34,7 @@ class ItemExtensionTest {
         assertEquals(itemSimple.id, entity.id)
         assertEquals(cartId, entity.cartId)
         assertEquals(itemSimple.name, entity.name)
-        assertEquals(itemSimple.unitPrice, entity.unitPrice)
+        assertEquals(itemSimple.totalPrice, entity.unitPrice)
         assertEquals(itemSimple.amount, entity.amount)
     }
 
@@ -52,7 +52,7 @@ class ItemExtensionTest {
 
         assertEquals(entity.id, model.id)
         assertEquals(entity.name, model.name)
-        assertEquals(entity.unitPrice, model.unitPrice)
+        assertEquals(entity.unitPrice, model.totalPrice)
         assertEquals(entity.amount, model.amount)
     }
 
@@ -61,7 +61,7 @@ class ItemExtensionTest {
         val measure: Measure<BaseUnits> = Measure(amount = 1.0, units = Length.meters)
         val model = ItemComparison(
             id = "1",
-            unitPrice = 10.0f,
+            totalPrice = 10.0f,
             amount = 2,
             brand = "BrandA",
             store = "StoreA",
@@ -78,7 +78,7 @@ class ItemExtensionTest {
         assertEquals(cartId, entity.cartId)
         assertEquals(model.brand, entity.brand)
         assertEquals(model.store, entity.store)
-        assertEquals(model.unitPrice, entity.unitPrice)
+        assertEquals(model.totalPrice, entity.unitPrice)
         assertEquals(model.amount, entity.amount)
         assertEquals(model.measure.units.baseUnitName, entity.baseUnit)
         assertEquals(model.measure.amount.toFloat(), entity.measure)
@@ -103,7 +103,7 @@ class ItemExtensionTest {
         assertEquals(entity.id, model.id)
         assertEquals(entity.brand, model.brand)
         assertEquals(entity.store, model.store)
-        assertEquals(entity.unitPrice, model.unitPrice)
+        assertEquals(entity.unitPrice, model.totalPrice)
         assertEquals(entity.amount, model.amount)
         assertEquals(entity.measure.toDouble(), model.measure.amount)
         assertEquals(entity.baseUnit, model.measure.units.baseUnitName)
@@ -128,7 +128,7 @@ class ItemExtensionTest {
         assertEquals(entity.id, model.id)
         assertEquals(entity.brand, model.brand)
         assertEquals(entity.store, model.store)
-        assertEquals(entity.unitPrice, model.unitPrice)
+        assertEquals(entity.unitPrice, model.totalPrice)
         assertEquals(entity.amount, model.amount)
         assertEquals(entity.measure.toDouble(), model.measure.amount)
         assertEquals(Length.meters.baseUnitName, model.measure.units.baseUnitName)

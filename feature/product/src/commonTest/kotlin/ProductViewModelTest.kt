@@ -28,7 +28,7 @@ class ProductViewModelTest {
     lateinit var repository: ProductRepository
     lateinit var viewModel: ProductViewModel
     val item1 = ItemComparison(
-        unitPrice = 15.4f,
+        totalPrice = 15.4f,
         amount = 1,
         brand = "Marata",
         store = "Pão de Açúcar",
@@ -38,7 +38,7 @@ class ProductViewModelTest {
         )
     )
     val item2 = ItemComparison(
-        unitPrice = 35f,
+        totalPrice = 35f,
         amount = 1,
         brand = "3 Corações",
         store = "Pão de Açúcar",
@@ -62,7 +62,7 @@ class ProductViewModelTest {
             units = gram
         ),
         itens = listOf(
-            item1.copy(brand = "Melk", unitPrice = 20f),
+            item1.copy(brand = "Melk", totalPrice = 20f),
             item2.copy(brand = "Nestlé")
         )
     )

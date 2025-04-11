@@ -13,7 +13,7 @@ fun ItemSimple.toEntity(cartId: String): ItemSimpleEntity {
         id = this.id,
         cartId = cartId,
         name = this.name,
-        unitPrice = this.unitPrice,
+        unitPrice = this.totalPrice * this.amount,
         amount = this.amount
     )
 }
@@ -22,7 +22,7 @@ fun ItemSimpleEntity.toModel(): ItemSimple {
     return ItemSimple(
         id = this.id,
         name = this.name,
-        unitPrice = this.unitPrice,
+        totalPrice = this.unitPrice / this.amount,
         amount = this.amount
     )
 }
@@ -34,7 +34,7 @@ fun ItemComparison.toEntity(productId: String, cartId: String? = null): ItemComp
         cartId = cartId,
         brand = this.brand,
         store = this.store,
-        unitPrice = this.unitPrice,
+        unitPrice = this.totalPrice / this.amount,
         amount = this.amount,
         baseUnit = this.measure.units.baseUnitName,
         measure = this.measure.amount.toFloat()
@@ -54,7 +54,7 @@ fun ItemComparisonEntity.toModel(entity: String): ItemComparison {
 
     return ItemComparison(
         id = this.id,
-        unitPrice = this.unitPrice,
+        totalPrice = this.unitPrice * this.amount,
         amount = this.amount,
         brand = this.brand,
         store = this.store,

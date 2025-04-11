@@ -16,6 +16,8 @@
     <string name="cd_save">Salvar produto</string>
     <string name="add_item">Adicionar Item</string>
     <string name="cd_add_item">Adicione item para comparar</string>
+    <string name="item_price_unit">Preço: R$ %1$s / und</string>
+    <string name="item_amount_unit">Quantidade: %1$s / und</string>
     <string name="undo">Desfazer</string>
     <string name="title_comparison_unit">Unidade de Comparação</string>
     <plurals name="items_quantity">

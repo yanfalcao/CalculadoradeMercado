@@ -28,7 +28,7 @@ class ProductDetailsVMTest {
     lateinit var repositoryItem: ItemRepository
     lateinit var viewModel: ProductDetailsVM
     val item1 = ItemComparison(
-        unitPrice = 15.4f,
+        totalPrice = 15.4f,
         amount = 1,
         brand = "Marata",
         store = "Pão de Açúcar",
@@ -38,7 +38,7 @@ class ProductDetailsVMTest {
         )
     )
     val item2 = ItemComparison(
-        unitPrice = 35f,
+        totalPrice = 35f,
         amount = 1,
         brand = "3 Corações",
         store = "Pão de Açúcar",
@@ -195,7 +195,7 @@ class ProductDetailsVMTest {
     fun productIntent_upgradeItem() = runTest {
         val editedItem1 = item1.copy(
             brand = "Café Gourmet - Latitude 33",
-            unitPrice = 45f
+            totalPrice = 45f
         )
         val productFlow = MutableStateFlow(product)
         viewModel = ProductDetailsVM(
@@ -227,7 +227,7 @@ class ProductDetailsVMTest {
             assertEquals(product.measureComparison, state.product.measureComparison)
             assertEquals(2, state.product.itens.size)
             assertEquals(editedItem1.brand, state.product.itens[0].brand)
-            assertEquals(editedItem1.unitPrice, state.product.itens[0].unitPrice)
+            assertEquals(editedItem1.totalPrice, state.product.itens[0].totalPrice)
         }
     }
 

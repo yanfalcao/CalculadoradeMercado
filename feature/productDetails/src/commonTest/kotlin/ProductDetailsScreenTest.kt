@@ -45,14 +45,14 @@ class ProductDetailsScreenTest {
                     id = "1",
                     brand = "Leite Integral",
                     measure = Measure(1.0, Volume.liter),
-                    unitPrice = 10f,
+                    totalPrice = 10f,
                     amount = 1
                 ),
                 ItemComparison(
                     id = "2",
                     brand = "Leite Desnatado",
                     measure = Measure(1.0, Volume.liter),
-                    unitPrice = 8f,
+                    totalPrice = 8f,
                     amount = 1
                 ),
             ),

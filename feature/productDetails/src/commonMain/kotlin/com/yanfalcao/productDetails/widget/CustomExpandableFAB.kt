@@ -65,7 +65,7 @@ fun CustomExpandableFAB(
         Column {
             AnimatedVisibility(
                 visible = buttonClicked,
-                enter = expandVertically(tween(1500)) + fadeIn(),
+                enter = expandVertically(tween(1300)) + fadeIn(),
                 exit = shrinkVertically(tween(1200)) + fadeOut(
                     animationSpec = tween(1000)
                 )
@@ -120,7 +120,7 @@ fun CustomExpandableFAB(
                     )
                     AnimatedVisibility(
                         visible = buttonClicked,
-                        enter = expandVertically(animationSpec = tween(1500)) + fadeIn(),
+                        enter = expandVertically(animationSpec = tween(1300)) + fadeIn(),
                         exit = shrinkVertically(tween(1200)) + fadeOut(tween(1200))
                     ) {
                         Row(Modifier.fillMaxWidth(1f)) {

@@ -4,6 +4,7 @@ package com.yanfalcao.productDetails
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,6 +51,7 @@ import com.yanfalcao.productDetails.widget.DropdownField
 import com.yanfalcao.productDetails.widget.EmptyListText
 import com.yanfalcao.productDetails.widget.FABItem
 import com.yanfalcao.productDetails.widget.InputDisplayField
+import com.yanfalcao.productDetails.widget.ProductComparisonCard
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -156,34 +158,6 @@ fun ProductDetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                InputDisplayField(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(Res.string.placeholder_name),
-                    onChange = { text ->
-                        handleIntent(
-                            ProductDetailsIntent.EditProduct(
-                                state.product.copy(name = text)
-                            )
-                        )
-                    },
-                    textState = state.product.name,
-                )
-            }
-
-            item {
-                DropdownField(
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    defaultItem = state.product.measureComparison.units.getDropItem(),
-                    itemList = state.product.measureComparison.units.entitiesToDropdownItem(),
-                    onUpdate = { item ->
-                        handleIntent(ProductDetailsIntent.EditProduct(
-                            product = state.product.copyBaseUnitComparison(item.baseUnit)
-                        ))
-                    }
-                )
-            }
-
-            item {
                 ComparisonUnitSection(
                     state = state,
                     handleIntent = handleIntent,
@@ -200,7 +174,19 @@ fun ProductDetailsScreen(
                     }
                 }
             } else {
+                item {
+                    Spacer(Modifier.height(10.dp))
+                }
 
+                state.product.itens.forEach { itemComparison ->
+                    item {
+                        ProductComparisonCard(
+                            item = itemComparison,
+                            measureComparison = state.product.measureComparison,
+                            handleIntent = handleIntent,
+                        )
+                    }
+                }
             }
         }
     }

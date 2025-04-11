@@ -9,9 +9,13 @@ import kotlin.uuid.Uuid
 
 data class ItemComparison(
     override val id: String = Uuid.random().toString(),
-    override val unitPrice: Float,
+    override val totalPrice: Float,
     override val amount: Int,
     val brand: String,
     val store: String? = null,
     val measure: Measure<BaseUnits>,
-) : Item
+) : Item() {
+    fun getPriceByMeasureComparison(measureComparison: Measure<BaseUnits>) {
+
+    }
+}
