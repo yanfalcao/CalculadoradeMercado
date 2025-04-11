@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.yanfalcao.productDetails.widget
+package com.yanfalcao.designsystem.widget
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -12,14 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import calculadorademercado.feature.productdetails.generated.resources.Res
-import calculadorademercado.feature.productdetails.generated.resources.cd_back_button
-import calculadorademercado.feature.productdetails.generated.resources.product
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CustomTopBar(
-    onBack: () -> Unit,
+    title: String,
+    contentDescription: String? = null,
+    onBack: (() -> Unit)? = null,
 ) {
     TopAppBar(
         colors = topAppBarColors(
@@ -28,17 +26,19 @@ fun CustomTopBar(
         ),
         title = {
             Text(
-                text = stringResource(Res.string.product),
+                text = title,
                 style = MaterialTheme.typography.headlineSmall
             )
         },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(Res.string.cd_back_button),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
+            if(onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = contentDescription,
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
         },
     )

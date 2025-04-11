@@ -38,6 +38,7 @@ import com.yanfalcao.designsystem.util.EnumSnackEvent
 import com.yanfalcao.designsystem.util.EventManager
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.ShowSnackbar
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.NavigateToProductDetail
+import com.yanfalcao.designsystem.widget.CustomTopBar
 import com.yanfalcao.product.state.ProductIntent
 import com.yanfalcao.product.state.ProductViewState
 import com.yanfalcao.product.widget.ComparativeList
@@ -114,17 +115,8 @@ fun ProductScreen(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    Text(
-                        text = stringResource(Res.string.comparatives),
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
+            CustomTopBar(
+                title = stringResource(Res.string.comparatives)
             )
         },
         floatingActionButton = {

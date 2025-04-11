@@ -2,7 +2,10 @@
 
 package com.yanfalcao.productDetails
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,9 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.productdetails.generated.resources.Res
+import calculadorademercado.feature.productdetails.generated.resources.cd_back_button
 import calculadorademercado.feature.productdetails.generated.resources.placeholder_name
+import calculadorademercado.feature.productdetails.generated.resources.product
 import calculadorademercado.feature.productdetails.generated.resources.snackbar_delete
 import calculadorademercado.feature.productdetails.generated.resources.undo
 import com.yanfalcao.designsystem.util.EnumSnackEvent
@@ -36,7 +42,7 @@ import com.yanfalcao.productDetails.widget.FloatingButton
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
 import com.yanfalcao.productDetails.widget.ComparisonUnitSection
-import com.yanfalcao.productDetails.widget.CustomTopBar
+import com.yanfalcao.designsystem.widget.CustomTopBar
 import com.yanfalcao.productDetails.widget.DropdownField
 import com.yanfalcao.productDetails.widget.EmptyListText
 import com.yanfalcao.productDetails.widget.InputDisplayField
@@ -110,7 +116,11 @@ fun ProductDetailsScreen(
             SnackbarHost(snackbarHostState)
         },
         topBar = {
-            CustomTopBar(onBack)
+            CustomTopBar(
+                title = stringResource(Res.string.product),
+                contentDescription = stringResource(Res.string.cd_back_button),
+                onBack = onBack
+            )
         },
         floatingActionButton = {
             FloatingButton(
@@ -131,19 +141,11 @@ fun ProductDetailsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(Res.string.placeholder_name),
                     onChange = { text ->
-                        if (text.isNotEmpty()) {
-                            handleIntent(
-                                ProductDetailsIntent.UpdateProduct(
-                                    state.product.copy(name = text)
-                                )
+                        handleIntent(
+                            ProductDetailsIntent.EditProduct(
+                                state.product.copy(name = text)
                             )
-                        } else {
-                            handleIntent(
-                                ProductDetailsIntent.EditProduct(
-                                    state.product.copy(name = text)
-                                )
-                            )
-                        }
+                        )
                     },
                     textState = state.product.name,
                 )
@@ -155,7 +157,7 @@ fun ProductDetailsScreen(
                     defaultItem = state.product.measureComparison.units.getDropItem(),
                     itemList = state.product.measureComparison.units.entitiesToDropdownItem(),
                     onUpdate = { item ->
-                        handleIntent(ProductDetailsIntent.UpdateProduct(
+                        handleIntent(ProductDetailsIntent.EditProduct(
                             product = state.product.copyBaseUnitComparison(item.baseUnit)
                         ))
                     }
@@ -170,7 +172,14 @@ fun ProductDetailsScreen(
             }
 
             if(state.product.itens.isEmpty()) {
-                item { EmptyListText() }
+                item {
+                    Box(
+                        Modifier.padding(top = 30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        EmptyListText()
+                    }
+                }
             } else {
 
             }

@@ -55,7 +55,7 @@ fun ComparisonUnitSection(
                 defaultItem = state.product.measureComparison.units.getBaseUnitDropItem(),
                 itemList = state.product.measureComparison.units.baseUnitsToDropdownItem(),
                 onUpdate = { item ->
-                    handleIntent(ProductDetailsIntent.UpdateProduct(
+                    handleIntent(ProductDetailsIntent.EditProduct(
                         product = state.product.copyBaseUnitComparison(item.baseUnit)
                     ))
                 }
