@@ -10,6 +10,12 @@
     <string name="empty_list_title">Adicione itens</string>
     <string name="empty_list">Vamos comparar para economizar</string>
     <string name="snackbar_delete">Comparativo deletado</string>
+    <string name="options">Opções</string>
+    <string name="cd_options">Abra opções de ação</string>
+    <string name="save">Salvar</string>
+    <string name="cd_save">Salvar produto</string>
+    <string name="add_item">Adicionar Item</string>
+    <string name="cd_add_item">Adicione item para comparar</string>
     <string name="undo">Desfazer</string>
     <string name="title_comparison_unit">Unidade de Comparação</string>
     <plurals name="items_quantity">

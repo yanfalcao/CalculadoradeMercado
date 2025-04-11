@@ -10,7 +10,7 @@ sealed class ProductDetailsIntent {
     data class EditState(val state: ProductDetailsVS) : ProductDetailsIntent()
     data class UpdateProduct(val product: Product) : ProductDetailsIntent()
     data class UpgradeItem(val itemComparison: ItemComparison) : ProductDetailsIntent()
-    data class CreateProduct(val product: Product) : ProductDetailsIntent()
+    object CreateProduct : ProductDetailsIntent()
     data class OpenItemToEdit(val product: Product) : ProductDetailsIntent()
     object OpenItemToCreate : ProductDetailsIntent()
     object UndoAction : ProductDetailsIntent()

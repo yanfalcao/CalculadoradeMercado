@@ -28,14 +28,14 @@ class ProductDetailsVM(
     fun handleIntent(intent: ProductDetailsIntent) {
         when (intent) {
             is ProductDetailsIntent.LoadProduct -> loadProduct(intent.productId)
-            is ProductDetailsIntent.CreateProduct -> TODO()
+            is ProductDetailsIntent.CreateProduct -> {}
             is ProductDetailsIntent.UndoAction -> TODO()
             is ProductDetailsIntent.RemoveLastUndo -> TODO()
             is ProductDetailsIntent.EditProduct -> editProduct(intent.product)
             is ProductDetailsIntent.EditState -> editState(intent.state)
             is ProductDetailsIntent.UpdateProduct -> updateProduct(intent.product)
             is ProductDetailsIntent.UpgradeItem -> TODO()
-            ProductDetailsIntent.OpenItemToCreate -> TODO()
+            is ProductDetailsIntent.OpenItemToCreate -> {}
             is ProductDetailsIntent.OpenItemToEdit -> TODO()
             is ProductDetailsIntent.RemoveItem -> TODO()
         }
