@@ -32,6 +32,7 @@ class ProductDetailsVM(
             is ProductDetailsIntent.UndoAction -> TODO()
             is ProductDetailsIntent.RemoveLastUndo -> TODO()
             is ProductDetailsIntent.EditProduct -> editProduct(intent.product)
+            is ProductDetailsIntent.EditState -> editState(intent.state)
             is ProductDetailsIntent.UpdateProduct -> updateProduct(intent.product)
             is ProductDetailsIntent.UpgradeItem -> TODO()
             ProductDetailsIntent.OpenItemToCreate -> TODO()
@@ -57,6 +58,12 @@ class ProductDetailsVM(
             _productViewState.value = _productViewState.value.copy(
                 product = product
             )
+        }
+    }
+
+    private fun editState(state: ProductDetailsVS) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productViewState.value = state
         }
     }
 

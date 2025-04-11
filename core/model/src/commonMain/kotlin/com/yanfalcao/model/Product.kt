@@ -13,7 +13,7 @@ import kotlin.uuid.Uuid
 data class Product(
     val id: String = Uuid.random().toString(),
     val name: String = "",
-    val measureComparison: Measure<BaseUnits> = Measure(100.0, Mass.gram),
+    val measureComparison: Measure<BaseUnits> = Measure(100.toDouble(), Mass.gram),
     val itens: List<ItemComparison> = listOf(),
     val createdAt: Instant = Clock.System.now(),
 )
