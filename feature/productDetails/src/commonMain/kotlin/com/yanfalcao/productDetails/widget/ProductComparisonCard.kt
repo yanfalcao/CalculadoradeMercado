@@ -27,17 +27,22 @@ import calculadorademercado.feature.productdetails.generated.resources.item_pric
 import com.yanfalcao.designsystem.icons.IconDelete
 import com.yanfalcao.designsystem.icons.IconEdit
 import com.yanfalcao.model.ItemComparison
+import com.yanfalcao.model.Product
 import com.yanfalcao.model.util.BaseUnits
 import com.yanfalcao.model.util.Measure
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
+import com.yanfalcao.productDetails.state.ProductDetailsVS
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProductComparisonCard(
     item: ItemComparison,
-    measureComparison: Measure<BaseUnits>,
+    state: ProductDetailsVS,
     handleIntent: (ProductDetailsIntent) -> Unit,
 ) {
+    val measureComparison = state.product.measureComparison
+    val priceByAmountComparison = item.getPriceByAmountComparison(measureComparison)
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
@@ -114,7 +119,7 @@ fun ProductComparisonCard(
                 )
 
                 Text(
-                    "R$ dsf / ",
+                    "R$ $priceByAmountComparison / ${measureComparison.amountWithAbbreviation()}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

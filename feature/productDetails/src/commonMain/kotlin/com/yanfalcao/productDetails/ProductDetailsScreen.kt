@@ -182,7 +182,7 @@ fun ProductDetailsScreen(
                     item {
                         ProductComparisonCard(
                             item = itemComparison,
-                            measureComparison = state.product.measureComparison,
+                            state = state,
                             handleIntent = handleIntent,
                         )
                     }

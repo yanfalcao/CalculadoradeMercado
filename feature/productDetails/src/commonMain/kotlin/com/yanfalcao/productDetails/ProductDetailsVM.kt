@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yanfalcao.data.repository.ProductRepository
 import com.yanfalcao.model.Product
+import com.yanfalcao.model.util.Measure
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +47,8 @@ class ProductDetailsVM(
             if(productId != null) {
                 productRepository.findProductById(productId).collect { product ->
                     _productViewState.value = _productViewState.value.copy(
-                        product = product
+                        product = product,
+                        amountComparison = product.measureComparison.amountFormatted()
                     )
                 }
             }
@@ -56,14 +58,31 @@ class ProductDetailsVM(
     private fun editProduct(product: Product) {
         viewModelScope.launch(Dispatchers.IO) {
             _productViewState.value = _productViewState.value.copy(
-                product = product
+                product = product.copy(
+                    itens = product.adjustItensToMeasureComparison()
+                )
             )
         }
     }
 
     private fun editState(state: ProductDetailsVS) {
         viewModelScope.launch(Dispatchers.IO) {
-            _productViewState.value = state
+            // Parse the amountComparison to Double, if it fails, use the default value
+            val amountComparison: Double = try {
+                state.amountComparison.toDouble()
+            } catch (e: NumberFormatException) {
+                state.product.measureComparison.amount
+            }
+
+            // Update the product view state with the new amountComparison
+            _productViewState.value = state.copy(
+                product = state.product.copy(
+                    measureComparison = Measure(
+                        amountComparison,
+                        state.product.measureComparison.units
+                    )
+                )
+            )
         }
     }
 

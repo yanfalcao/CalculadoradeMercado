@@ -15,3 +15,14 @@ fun Double.toString(numOfDec: Int): String {
         return integerPart.toString()
     }
 }
+
+fun Double.moneyStringFormat(): String {
+    var text = this.toString(2)
+    var decimals = text.split(".").lastOrNull() ?: ""
+    text += when(decimals.length) {
+        0 -> ".00"
+        1 -> "0"
+        else -> ""
+    }
+    return text.replace(".", ",")
+}
