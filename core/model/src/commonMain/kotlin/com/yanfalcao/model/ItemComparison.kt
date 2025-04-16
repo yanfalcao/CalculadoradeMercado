@@ -5,17 +5,18 @@ package com.yanfalcao.model
 import com.yanfalcao.model.extension.moneyStringFormat
 import com.yanfalcao.model.util.Measure
 import com.yanfalcao.model.util.BaseUnits
+import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.times
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 data class ItemComparison(
     override val id: String = Uuid.random().toString(),
-    override val totalPrice: Float,
-    override val amount: Int,
-    val brand: String,
+    override val totalPrice: Float = 0.0f,
+    override val amount: Int = 0,
+    val brand: String = "",
     val store: String? = null,
-    val measure: Measure<BaseUnits>,
+    val measure: Measure<BaseUnits> = Measure(0.0, Mass.gram),
 ) : Item() {
     fun getPriceByAmountComparison(measureComparison: Measure<BaseUnits>): String {
         try {

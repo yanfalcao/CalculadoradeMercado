@@ -3,7 +3,10 @@ package com.yanfalcao.productDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yanfalcao.data.repository.ProductRepository
+import com.yanfalcao.designsystem.util.EventManager
+import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
+import com.yanfalcao.model.extension.moneyStringFormat
 import com.yanfalcao.model.util.Measure
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
@@ -36,9 +39,11 @@ class ProductDetailsVM(
             is ProductDetailsIntent.EditState -> editState(intent.state)
             is ProductDetailsIntent.UpdateProduct -> updateProduct(intent.product)
             is ProductDetailsIntent.UpgradeItem -> TODO()
-            is ProductDetailsIntent.OpenItemToCreate -> {}
-            is ProductDetailsIntent.OpenItemToEdit -> TODO()
+            is ProductDetailsIntent.OpenItemToCreate -> openItem()
+            is ProductDetailsIntent.OpenItemToEdit -> openItem(intent.item)
             is ProductDetailsIntent.RemoveItem -> TODO()
+            is ProductDetailsIntent.CloseItemEdit -> closeItem()
+            is ProductDetailsIntent.EditItem -> editItem(intent.state)
         }
     }
 
@@ -52,6 +57,12 @@ class ProductDetailsVM(
                     )
                 }
             }
+        }
+    }
+
+    private fun editItem(item: ProductDetailsVS) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productViewState.value = item
         }
     }
 
@@ -91,6 +102,38 @@ class ProductDetailsVM(
             if(_productViewState.value.product.name.isNotEmpty()) {
                 productRepository.updateProduct(product)
             }
+        }
+    }
+
+    private fun openItem(itemComparison: ItemComparison? = null) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(itemComparison != null) {
+                _productViewState.value = _productViewState.value.copy(
+                    itemBrand = itemComparison.brand,
+                    itemPrice = itemComparison.totalPrice.toDouble().moneyStringFormat(),
+                    itemStore = itemComparison.store ?: "",
+                    itemAmount = itemComparison.amount.toString(),
+                    itemBaseUnit = itemComparison.measure.units,
+                    itemAmountComparison = itemComparison.measure.amountFormatted()
+                )
+            }
+
+            EventManager.triggerEvent(EventManager.AppEvent.OpenBottomSheet)
+        }
+    }
+
+    private fun closeItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _productViewState.value = _productViewState.value.copy(
+                itemBrand = "",
+                itemPrice = "",
+                itemStore = "",
+                itemAmount = "",
+                itemBaseUnit = _productViewState.value.product.measureComparison.units,
+                itemAmountComparison = ""
+            )
+
+            EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)
         }
     }
 }

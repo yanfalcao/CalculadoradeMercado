@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 fun NumberInputField (
     modifier: Modifier = Modifier,
     label: String,
+    prefix: String? = null,
     onChange: (String) -> Unit,
     textState: String,
 ) {
@@ -35,13 +36,8 @@ fun NumberInputField (
     BasicTextField(
         value = inputText.value,
         onValueChange = { newText ->
-            if(newText.isEmpty()) {
-                inputText.value = newText
-                onChange(newText)
-            } else if (newText.all { it.isDigit() || it == '.' }) {
-                inputText.value = newText
-                onChange(newText)
-            }
+            inputText.value = newText
+            onChange(newText)
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = modifier
@@ -68,7 +64,20 @@ fun NumberInputField (
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
-                    innerTextField()
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if(prefix != null) {
+                            Text(
+                                modifier = Modifier.padding(end = 6.dp),
+                                text = prefix,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        innerTextField()
+                    }
                 }
             }
         },

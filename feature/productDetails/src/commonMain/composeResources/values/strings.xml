@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="product">Product</string>
+    <string name="product">Produto</string>
     <string name="placeholder_name">Digite o nome do produto</string>
     <string name="placeholder_amount">Digite a quantidade</string>
+    <string name="placeholder">Digite aqui</string>
     <string name="cd_edit_button">Editar comparativo</string>
     <string name="cd_delete_button">Deletar comparativo</string>
     <string name="cd_floating_button">Ações do produto</string>
@@ -19,6 +20,13 @@
     <string name="item_price_unit">Preço: R$ %1$s / und</string>
     <string name="item_amount_unit">Quantidade: %1$s / und</string>
     <string name="undo">Desfazer</string>
+    <string name="brand">Marca</string>
+    <string name="amount">Quantidade</string>
+    <string name="price">Preço total</string>
+    <string name="store">Loja</string>
+    <string name="unit">Unidade</string>
+    <string name="measure_amount">Tamanho</string>
+
     <string name="title_comparison_unit">Unidade de Comparação</string>
     <plurals name="items_quantity">
         <item quantity="zero">%1$d item</item>

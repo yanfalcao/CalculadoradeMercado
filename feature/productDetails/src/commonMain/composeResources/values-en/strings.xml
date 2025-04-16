@@ -3,6 +3,7 @@
     <string name="product">Product</string>
     <string name="placeholder_name">Type the product name</string>
     <string name="placeholder_amount">Type the amount</string>
+    <string name="placeholder">Type here</string>
     <string name="cd_edit_button">Edit comparative</string>
     <string name="cd_delete_button">Delete comparative</string>
     <string name="cd_floating_button">Product actions</string>
@@ -19,6 +20,13 @@
     <string name="item_amount_unit">Amount: %1$s / unit</string>
     <string name="cd_add_item">Add item to compare</string>
     <string name="undo">Undo</string>
+    <string name="brand">Brand</string>
+    <string name="amount">Amount</string>
+    <string name="price">Total price</string>
+    <string name="store">Store</string>
+    <string name="unit">Unit</string>
+    <string name="measure_amount">Size</string>
+
     <string name="title_comparison_unit">Comparison Unit</string>
     <plurals name="items_quantity">
         <item quantity="zero">No items</item>

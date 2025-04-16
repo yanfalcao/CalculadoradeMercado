@@ -18,5 +18,7 @@ object EventManager {
     sealed class AppEvent {
         data class ShowSnackbar(val snackEvent: EnumSnackEvent) : AppEvent()
         data class NavigateToProductDetail(val productId: String? = null) : AppEvent()
+        object OpenBottomSheet : AppEvent()
+        object CloseBottomSheet : AppEvent()
     }
 }

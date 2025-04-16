@@ -93,6 +93,8 @@ fun ProductRoute(
                 is NavigateToProductDetail -> {
                     navigateToProductDetail(event.productId)
                 }
+
+                else -> {}
             }
         }
     }

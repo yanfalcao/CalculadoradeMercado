@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,7 +25,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun InputDisplayField(
     modifier: Modifier = Modifier,
-    label: String,
+    label: String? = null,
+    posfix: String = "",
     onChange: (String) -> Unit,
     textState: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -59,14 +62,29 @@ fun InputDisplayField(
                 Box {
                     if (inputText.value.isEmpty()) {
                         Text(
-                            text = label,
+                            text = label ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             color = MaterialTheme.colorScheme.outline,
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
-                    innerTextField()
+                    Row{
+                        Box(Modifier.weight(1f)) {
+                            innerTextField()
+                        }
+
+                        if (posfix.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier
+                                    .weight(0.5f)
+                                    .padding(start = 8.dp),
+                                text = posfix,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
+
                 }
             }
         },
