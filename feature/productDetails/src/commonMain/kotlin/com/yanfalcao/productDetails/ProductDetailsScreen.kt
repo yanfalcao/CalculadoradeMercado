@@ -132,9 +132,6 @@ fun ProductDetailsScreen(
         BottomSheetItem(
             state = state,
             handleIntent = handleIntent,
-            onDismiss = {
-                handleIntent(ProductDetailsIntent.CloseItemEdit)
-            },
         )
     }
 

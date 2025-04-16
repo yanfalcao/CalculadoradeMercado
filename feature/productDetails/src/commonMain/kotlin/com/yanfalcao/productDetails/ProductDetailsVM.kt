@@ -1,7 +1,9 @@
 package com.yanfalcao.productDetails
 
+import androidx.compose.runtime.saveable.listSaver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yanfalcao.data.repository.ItemRepository
 import com.yanfalcao.data.repository.ProductRepository
 import com.yanfalcao.designsystem.util.EventManager
 import com.yanfalcao.model.ItemComparison
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 class ProductDetailsVM(
     private val productId: String? = null,
     private val productRepository: ProductRepository,
+    private val itemRepository: ItemRepository,
 ) : ViewModel() {
     private val _productViewState = MutableStateFlow(ProductDetailsVS(
         product = Product()
@@ -35,15 +38,15 @@ class ProductDetailsVM(
             is ProductDetailsIntent.CreateProduct -> {}
             is ProductDetailsIntent.UndoAction -> TODO()
             is ProductDetailsIntent.RemoveLastUndo -> TODO()
+            is ProductDetailsIntent.RemoveItem -> TODO()
             is ProductDetailsIntent.EditProduct -> editProduct(intent.product)
             is ProductDetailsIntent.EditState -> editState(intent.state)
+            is ProductDetailsIntent.EditItem -> editItem(intent.state)
             is ProductDetailsIntent.UpdateProduct -> updateProduct(intent.product)
-            is ProductDetailsIntent.UpgradeItem -> TODO()
+            is ProductDetailsIntent.UpgradeItem -> updateItem()
             is ProductDetailsIntent.OpenItemToCreate -> openItem()
             is ProductDetailsIntent.OpenItemToEdit -> openItem(intent.item)
-            is ProductDetailsIntent.RemoveItem -> TODO()
             is ProductDetailsIntent.CloseItemEdit -> closeItem()
-            is ProductDetailsIntent.EditItem -> editItem(intent.state)
         }
     }
 
@@ -105,16 +108,70 @@ class ProductDetailsVM(
         }
     }
 
+    private fun updateItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val state = _productViewState.value
+            val itemId = state.itemId
+            var itemComparison = if(itemId != null) {
+                state.product.itens.find { it.id == itemId }
+            } else {
+                ItemComparison()
+            }
+            val store = state.itemStore.ifEmpty { null }
+
+            if(state.isItemBrandValid()
+                && state.isItemBrandValid()
+                && state.isItemAmountValid()
+                && state.isItemPriceValid()
+            ) {
+                itemComparison = itemComparison?.copy(
+                    totalPrice = state.itemPrice.replace(",", ".").toFloat(),
+                    amount = state.itemAmount.replace(",", ".").toDouble().toInt(),
+                    brand = state.itemBrand,
+                    store = store,
+                    measure = Measure(
+                        state.itemAmountComparison.replace(",", ".").toDouble(),
+                        state.itemBaseUnit
+                    )
+                )
+
+                if(itemId.isNullOrEmpty()) {
+                    _productViewState.value = _productViewState.value.copy(
+                        product = _productViewState.value.product.copy(
+                            itens = _productViewState.value.product.itens + itemComparison!!
+                        )
+                    )
+                } else {
+                    _productViewState.value = _productViewState.value.copy(
+                        product = _productViewState.value.product.copy(
+                            itens = _productViewState.value.product.itens.map {
+                                if(it.id == itemId) { itemComparison!! } else { it }
+                            }
+                        )
+                    )
+                }
+
+                EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)
+            } else {
+                _productViewState.value = _productViewState.value.copy(
+                    checkItemFormat = true
+                )
+            }
+        }
+    }
+
     private fun openItem(itemComparison: ItemComparison? = null) {
         viewModelScope.launch(Dispatchers.IO) {
             if(itemComparison != null) {
                 _productViewState.value = _productViewState.value.copy(
+                    itemId = itemComparison.id,
                     itemBrand = itemComparison.brand,
                     itemPrice = itemComparison.totalPrice.toDouble().moneyStringFormat(),
                     itemStore = itemComparison.store ?: "",
                     itemAmount = itemComparison.amount.toString(),
                     itemBaseUnit = itemComparison.measure.units,
-                    itemAmountComparison = itemComparison.measure.amountFormatted()
+                    itemAmountComparison = itemComparison.measure.amountFormatted(),
+                    checkItemFormat = false,
                 )
             }
 
@@ -125,12 +182,14 @@ class ProductDetailsVM(
     private fun closeItem() {
         viewModelScope.launch(Dispatchers.IO) {
             _productViewState.value = _productViewState.value.copy(
+                itemId = null,
                 itemBrand = "",
                 itemPrice = "",
                 itemStore = "",
                 itemAmount = "",
                 itemBaseUnit = _productViewState.value.product.measureComparison.units,
-                itemAmountComparison = ""
+                itemAmountComparison = "",
+                checkItemFormat = false,
             )
 
             EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)

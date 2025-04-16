@@ -1,6 +1,7 @@
 package com.yanfalcao.productDetails.widget
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.yanfalcao.designsystem.util.Validation
 
 @Composable
 fun NumberInputField (
@@ -28,10 +30,23 @@ fun NumberInputField (
     prefix: String? = null,
     onChange: (String) -> Unit,
     textState: String,
+    checkFormat: Boolean = false
 ) {
     val inputText = remember { mutableStateOf("") }
+    val outlineError = remember { mutableStateOf(false) }
 
     inputText.value = textState
+
+    outlineError.value = if(checkFormat) {
+        !Validation.validNumber(inputText.value)
+    } else {
+        false
+    }
+
+    val borderErrorColor = if (outlineError.value)
+        MaterialTheme.colorScheme.error
+    else
+        MaterialTheme.colorScheme.surface
 
     BasicTextField(
         value = inputText.value,
@@ -51,7 +66,13 @@ fun NumberInputField (
         singleLine = true,
         decorationBox = { innerTextField ->
             Row(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                modifier = Modifier
+                    .border(
+                        width = 1.5.dp,
+                        color = borderErrorColor,
+                        shape = RoundedCornerShape(size = 30.dp)
+                    )
+                    .padding(start = 20.dp, end = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box {

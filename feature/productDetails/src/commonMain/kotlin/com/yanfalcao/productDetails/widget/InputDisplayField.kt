@@ -1,12 +1,11 @@
 package com.yanfalcao.productDetails.widget
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.yanfalcao.designsystem.util.Validation
 
 @Composable
 fun InputDisplayField(
@@ -30,12 +31,31 @@ fun InputDisplayField(
     onChange: (String) -> Unit,
     textState: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    checkFormat: Boolean = false
 ) {
     val inputText = remember { mutableStateOf("") }
+    val outlineError = remember { mutableStateOf(false) }
 
     if (textState.isNotEmpty()) {
         inputText.value = textState
     }
+
+    outlineError.value = if(checkFormat) {
+        when (keyboardOptions.keyboardType) {
+            KeyboardType.Number -> !Validation.validNumber(inputText.value)
+            KeyboardType.Decimal -> !Validation.validNumber(inputText.value)
+            KeyboardType.Unspecified -> !Validation.validString(inputText.value)
+            KeyboardType.Text -> !Validation.validString(inputText.value)
+            else -> false
+        }
+    } else {
+        false
+    }
+
+    val borderErrorColor = if (outlineError.value)
+        MaterialTheme.colorScheme.error
+    else
+        MaterialTheme.colorScheme.surface
 
     BasicTextField(
         value = inputText.value,
@@ -53,10 +73,15 @@ fun InputDisplayField(
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
         textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
         singleLine = true,
-
         decorationBox = { innerTextField ->
             Row(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                modifier = Modifier
+                    .border(
+                        width = 1.5.dp,
+                        color = borderErrorColor,
+                        shape = RoundedCornerShape(size = 30.dp)
+                    )
+                    .padding(start = 20.dp, end = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box {
