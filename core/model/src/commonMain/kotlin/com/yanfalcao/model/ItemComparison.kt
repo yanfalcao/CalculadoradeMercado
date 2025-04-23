@@ -18,7 +18,7 @@ data class ItemComparison(
     val store: String? = null,
     val measure: Measure<BaseUnits> = Measure(0.0, Mass.gram),
 ) : Item() {
-    fun getPriceByAmountComparison(measureComparison: Measure<BaseUnits>): String {
+    fun getPriceByAmount(measureComparison: Measure<BaseUnits>): Double {
         try {
             // Convert the total price to the same unit as the measureComparison
             val amountItem = measure.amount * measure.units `in` measureComparison.units
@@ -26,12 +26,14 @@ data class ItemComparison(
             val unitPrice = totalPrice / amount
 
             // Calculate the price per unit of the comparison measure
-            val priceByAmountComparison = (unitPrice * amountComparison) / amountItem
-
-            return priceByAmountComparison.moneyStringFormat()
+            return (unitPrice * amountComparison) / amountItem
         } catch (e: Exception) {
             e.printStackTrace()
-            return "0.00"
+            return 0.00
         }
+    }
+
+    fun getPriceByAmountString(measureComparison: Measure<BaseUnits>): String {
+        return getPriceByAmount(measureComparison).moneyStringFormat()
     }
 }

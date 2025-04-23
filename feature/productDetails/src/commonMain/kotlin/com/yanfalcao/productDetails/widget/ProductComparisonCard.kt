@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.productdetails.generated.resources.Res
 import calculadorademercado.feature.productdetails.generated.resources.item_amount_unit
+import calculadorademercado.feature.productdetails.generated.resources.item_price_difference
 import calculadorademercado.feature.productdetails.generated.resources.item_price_unit
 import com.yanfalcao.designsystem.icons.IconDelete
 import com.yanfalcao.designsystem.icons.IconEdit
@@ -34,7 +35,13 @@ fun ProductComparisonCard(
     handleIntent: (ProductDetailsIntent) -> Unit,
 ) {
     val measureComparison = state.product.measureComparison
-    val priceByAmountComparison = item.getPriceByAmountComparison(measureComparison)
+    val priceByAmountComparison = item.getPriceByAmountString(measureComparison)
+    val isCheapest = state.product.isCheapest(item.id)
+    val strokeColor = when(isCheapest) {
+        true -> MaterialTheme.colorScheme.primary
+        false -> MaterialTheme.colorScheme.secondary
+    }
+    val percentualDifference = state.product.percentageDifferenceByCheapester(item.id)
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -42,7 +49,7 @@ fun ProductComparisonCard(
         color = MaterialTheme.colorScheme.background,
         border = BorderStroke(
             1.5.dp,
-            color = MaterialTheme.colorScheme.primary
+            color = strokeColor
         )
     ) {
         Column(Modifier
@@ -95,7 +102,7 @@ fun ProductComparisonCard(
 
             HorizontalDivider(
                 modifier = Modifier.padding(top = 10.dp, bottom = 15.dp),
-                color = MaterialTheme.colorScheme.primary,
+                color = strokeColor,
                 thickness = 1.5.dp
             )
 
@@ -119,6 +126,13 @@ fun ProductComparisonCard(
                     "R$ $priceByAmountComparison / ${measureComparison.amountWithAbbreviation()}",
                     style = MaterialTheme.typography.bodySmall
                 )
+
+                if(percentualDifference != null) {
+                    Text(
+                        stringResource(Res.string.item_price_difference, percentualDifference.toInt()),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
             }
 
         }

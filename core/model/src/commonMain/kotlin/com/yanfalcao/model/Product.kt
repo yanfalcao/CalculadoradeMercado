@@ -17,6 +17,30 @@ data class Product(
     var itens: List<ItemComparison> = listOf(),
     val createdAt: Instant = Clock.System.now(),
 ) {
+    private fun getCheapest(): ItemComparison? {
+        return itens.minByOrNull { it.getPriceByAmount(measureComparison) }
+    }
+
+    fun isCheapest(itemId: String): Boolean {
+        val cheapestItem = getCheapest()
+
+        return cheapestItem?.let { it.id == itemId } ?: false
+    }
+
+    fun percentageDifferenceByCheapester(itemId: String): Double? {
+        val cheapestItem = itens.minByOrNull { it.getPriceByAmount(measureComparison) }
+        val item = itens.find { it.id == itemId }
+
+        return if (cheapestItem != null && cheapestItem.id == itemId) {
+            null
+        } else {
+            val itemPrice = item?.getPriceByAmount(measureComparison) ?: return null
+            val cheapestPrice = cheapestItem?.getPriceByAmount(measureComparison) ?: return null
+
+            ((itemPrice - cheapestPrice) / cheapestPrice) * 100
+        }
+    }
+
     fun adjustItensToMeasureComparison(): List<ItemComparison> {
         val adjustedList = mutableListOf<ItemComparison>()
         itens.forEach { item ->
