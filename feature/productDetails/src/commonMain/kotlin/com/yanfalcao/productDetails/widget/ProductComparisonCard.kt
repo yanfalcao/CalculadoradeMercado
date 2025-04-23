@@ -1,17 +1,12 @@
 package com.yanfalcao.productDetails.widget
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.productdetails.generated.resources.Res
 import calculadorademercado.feature.productdetails.generated.resources.item_amount_unit
@@ -27,9 +23,6 @@ import calculadorademercado.feature.productdetails.generated.resources.item_pric
 import com.yanfalcao.designsystem.icons.IconDelete
 import com.yanfalcao.designsystem.icons.IconEdit
 import com.yanfalcao.model.ItemComparison
-import com.yanfalcao.model.Product
-import com.yanfalcao.model.util.BaseUnits
-import com.yanfalcao.model.util.Measure
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
 import org.jetbrains.compose.resources.stringResource
@@ -63,7 +56,9 @@ fun ProductComparisonCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         item.brand,
                         style = MaterialTheme.typography.bodyMedium
@@ -72,7 +67,9 @@ fun ProductComparisonCard(
                     if (!item.store.isNullOrEmpty()) {
                         Text(
                             "• ${item.store}",
-                            style = MaterialTheme.typography.bodySmall
+                            modifier = Modifier.padding(start = 6.dp),
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }

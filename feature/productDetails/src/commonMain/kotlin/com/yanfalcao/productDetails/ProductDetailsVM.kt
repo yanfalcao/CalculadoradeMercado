@@ -113,7 +113,7 @@ class ProductDetailsVM(
             val state = _productViewState.value
             val itemId = state.itemId
             var itemComparison = if(itemId != null) {
-                state.product.itens.find { it.id == itemId }
+                state.product.itens.find { it.id == itemId } ?: ItemComparison()
             } else {
                 ItemComparison()
             }
@@ -124,7 +124,7 @@ class ProductDetailsVM(
                 && state.isItemAmountValid()
                 && state.isItemPriceValid()
             ) {
-                itemComparison = itemComparison?.copy(
+                itemComparison = itemComparison.copy(
                     totalPrice = state.itemPrice.replace(",", ".").toFloat(),
                     amount = state.itemAmount.replace(",", ".").toDouble().toInt(),
                     brand = state.itemBrand,
@@ -138,20 +138,20 @@ class ProductDetailsVM(
                 if(itemId.isNullOrEmpty()) {
                     _productViewState.value = _productViewState.value.copy(
                         product = _productViewState.value.product.copy(
-                            itens = _productViewState.value.product.itens + itemComparison!!
+                            itens = _productViewState.value.product.itens + itemComparison
                         )
                     )
                 } else {
                     _productViewState.value = _productViewState.value.copy(
                         product = _productViewState.value.product.copy(
                             itens = _productViewState.value.product.itens.map {
-                                if(it.id == itemId) { itemComparison!! } else { it }
+                                if(it.id == itemId) { itemComparison } else { it }
                             }
                         )
                     )
                 }
 
-                EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)
+                closeItem()
             } else {
                 _productViewState.value = _productViewState.value.copy(
                     checkItemFormat = true
