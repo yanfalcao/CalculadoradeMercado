@@ -176,7 +176,6 @@ class ProductDetailsVMTest {
             }
 
             viewModel.handleIntent(ProductDetailsIntent.LoadProduct("1"))
-            viewModel.handleIntent(ProductDetailsIntent.UpdateProduct(editedProduct))
 
             // initial state
             var state = awaitItem()

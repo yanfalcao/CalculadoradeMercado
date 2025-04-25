@@ -1,6 +1,5 @@
 package com.yanfalcao.productDetails
 
-import androidx.compose.runtime.saveable.listSaver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yanfalcao.data.repository.ItemRepository
@@ -35,18 +34,37 @@ class ProductDetailsVM(
     fun handleIntent(intent: ProductDetailsIntent) {
         when (intent) {
             is ProductDetailsIntent.LoadProduct -> loadProduct(intent.productId)
-            is ProductDetailsIntent.CreateProduct -> {}
+            is ProductDetailsIntent.SaveProduct -> saveProduct()
             is ProductDetailsIntent.UndoAction -> TODO()
             is ProductDetailsIntent.RemoveLastUndo -> TODO()
             is ProductDetailsIntent.RemoveItem -> TODO()
-            is ProductDetailsIntent.EditProduct -> editProduct(intent.product)
-            is ProductDetailsIntent.EditState -> editState(intent.state)
+            is ProductDetailsIntent.EditProduct -> editProduct(intent.state)
             is ProductDetailsIntent.EditItem -> editItem(intent.state)
-            is ProductDetailsIntent.UpdateProduct -> updateProduct(intent.product)
             is ProductDetailsIntent.UpgradeItem -> updateItem()
             is ProductDetailsIntent.OpenItemToCreate -> openItem()
             is ProductDetailsIntent.OpenItemToEdit -> openItem(intent.item)
             is ProductDetailsIntent.CloseItemEdit -> closeItem()
+        }
+    }
+
+    private fun saveProduct() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val product = _productViewState.value.product
+
+            if(product.name.isNotEmpty()
+            ) {
+                if(productId.isNullOrEmpty()) {
+                    productRepository.saveProduct(product)
+                } else {
+                    productRepository.updateProduct(product)
+                }
+
+                EventManager.triggerEvent(EventManager.AppEvent.CloseScreen)
+            } else {
+                _productViewState.value = _productViewState.value.copy(
+                    checkProductFormat = true
+                )
+            }
         }
     }
 
@@ -69,17 +87,7 @@ class ProductDetailsVM(
         }
     }
 
-    private fun editProduct(product: Product) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _productViewState.value = _productViewState.value.copy(
-                product = product.copy(
-                    itens = product.adjustItensToMeasureComparison()
-                )
-            )
-        }
-    }
-
-    private fun editState(state: ProductDetailsVS) {
+    private fun editProduct(state: ProductDetailsVS) {
         viewModelScope.launch(Dispatchers.IO) {
             // Parse the amountComparison to Double, if it fails, use the default value
             val amountComparison: Double = try {
@@ -88,23 +96,15 @@ class ProductDetailsVM(
                 state.product.measureComparison.amount
             }
 
-            // Update the product view state with the new amountComparison
             _productViewState.value = state.copy(
                 product = state.product.copy(
+                    itens = state.product.adjustItensToMeasureComparison(),
                     measureComparison = Measure(
                         amountComparison,
                         state.product.measureComparison.units
                     )
                 )
             )
-        }
-    }
-
-    private fun updateProduct(product: Product) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if(_productViewState.value.product.name.isNotEmpty()) {
-                productRepository.updateProduct(product)
-            }
         }
     }
 

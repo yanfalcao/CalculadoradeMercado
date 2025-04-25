@@ -41,6 +41,7 @@ import com.yanfalcao.designsystem.util.EventManager
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.ShowSnackbar
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.OpenBottomSheet
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseBottomSheet
+import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseScreen
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.state.ProductDetailsVS
 import com.yanfalcao.productDetails.widget.ComparisonUnitSection
@@ -102,6 +103,9 @@ fun ProductDetailsRoute(
                 is CloseBottomSheet -> {
                     showSheet = false
                 }
+                is CloseScreen -> {
+                    onBackClick()
+                }
                 else -> {}
             }
         }
@@ -149,7 +153,7 @@ fun ProductDetailsScreen(
                     icon = Res.drawable.ic_save,
                     text = stringResource(Res.string.save),
                     contentDescription = stringResource(Res.string.cd_save),
-                    onClick = { handleIntent(ProductDetailsIntent.CreateProduct) }
+                    onClick = { handleIntent(ProductDetailsIntent.SaveProduct) }
                 ),
                 FABItem(
                     icon = Res.drawable.ic_tag,

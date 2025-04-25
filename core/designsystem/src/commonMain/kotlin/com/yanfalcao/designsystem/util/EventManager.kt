@@ -20,5 +20,6 @@ object EventManager {
         data class NavigateToProductDetail(val productId: String? = null) : AppEvent()
         object OpenBottomSheet : AppEvent()
         object CloseBottomSheet : AppEvent()
+        object CloseScreen : AppEvent()
     }
 }

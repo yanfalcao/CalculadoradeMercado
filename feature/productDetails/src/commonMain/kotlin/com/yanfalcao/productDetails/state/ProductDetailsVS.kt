@@ -16,6 +16,7 @@ data class ProductDetailsVS(
     val itemBaseUnit: BaseUnits = product.measureComparison.units,
     val itemAmountComparison: String = "",
     val checkItemFormat: Boolean = false,
+    val checkProductFormat: Boolean = false,
 ) {
     fun isItemPriceValid(): Boolean {
         return Validation.validNumber(itemPrice)

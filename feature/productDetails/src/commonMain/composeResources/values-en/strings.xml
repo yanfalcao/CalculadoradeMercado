@@ -18,7 +18,7 @@
     <string name="add_item">Add Item</string>
     <string name="item_price_unit">Price: R$ %1$s / unit</string>
     <string name="item_amount_unit">Amount: %1$s / unit</string>
-    <string name="item_price_difference">%1$s% more expensive per item</string>
+    <string name="item_price_difference">%1$s% more expensive</string>
     <string name="cd_add_item">Add item to compare</string>
     <string name="undo">Undo</string>
     <string name="brand">Brand</string>

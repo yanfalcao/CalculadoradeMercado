@@ -19,7 +19,7 @@
     <string name="cd_add_item">Adicione item para comparar</string>
     <string name="item_price_unit">Preço: R$ %1$s / und</string>
     <string name="item_amount_unit">Quantidade: %1$s / und</string>
-    <string name="item_price_difference">%1$s% mais caro por item</string>
+    <string name="item_price_difference">%1$s% mais caro</string>
     <string name="undo">Desfazer</string>
     <string name="brand">Marca</string>
     <string name="amount">Quantidade</string>

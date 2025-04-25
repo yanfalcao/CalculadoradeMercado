@@ -55,6 +55,14 @@ internal class DefaultProductRepository(
     }
 
     override fun updateProduct(product: Product) {
+        product.itens
+            .map { item ->
+                item.toEntity(productId = product.id)
+            }
+            .forEach { itemDatabase ->
+                itemComparisonDao.insert(itemDatabase)
+            }
+
         productDao.update(product.toEntity())
     }
 

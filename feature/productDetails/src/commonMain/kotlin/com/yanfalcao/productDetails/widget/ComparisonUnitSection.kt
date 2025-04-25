@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,11 +37,14 @@ fun ComparisonUnitSection(
             onChange = { text ->
                 handleIntent(
                     ProductDetailsIntent.EditProduct(
-                        state.product.copy(name = text)
+                        state = state.copy(
+                            product = state.product.copy(name = text)
+                        )
                     )
                 )
             },
             textState = state.product.name,
+            checkFormat = state.checkProductFormat
         )
 
         Spacer(Modifier.height(15.dp))
@@ -53,7 +55,9 @@ fun ComparisonUnitSection(
             itemList = state.product.measureComparison.units.entitiesToDropdownItem(),
             onUpdate = { item ->
                 handleIntent(ProductDetailsIntent.EditProduct(
-                    product = state.product.copyBaseUnitComparison(item.baseUnit)
+                    state = state.copy(
+                        product = state.product.copyBaseUnitComparison(item.baseUnit)
+                    )
                 ))
             }
         )
@@ -77,7 +81,7 @@ fun ComparisonUnitSection(
                 label = stringResource(Res.string.placeholder_amount),
                 onChange = { text ->
                     handleIntent(
-                        ProductDetailsIntent.EditState(
+                        ProductDetailsIntent.EditProduct(
                             state = state.copy(amountComparison = text)
                         )
                     )
@@ -90,7 +94,9 @@ fun ComparisonUnitSection(
                 itemList = state.product.measureComparison.units.baseUnitsToDropdownItem(),
                 onUpdate = { item ->
                     handleIntent(ProductDetailsIntent.EditProduct(
-                        product = state.product.copyBaseUnitComparison(item.baseUnit)
+                        state = state.copy(
+                            product = state.product.copyBaseUnitComparison(item.baseUnit)
+                        )
                     ))
                 }
             )
