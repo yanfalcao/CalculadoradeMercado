@@ -77,7 +77,7 @@ fun ProductDetailsRoute(
             when(event) {
                 is ShowSnackbar -> {
                     when(event.snackEvent) {
-                        EnumSnackEvent.DELETE_PRODUCT -> {
+                        EnumSnackEvent.DELETE_ITEM -> {
                             coroutineScope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = snackDeleteText,
@@ -95,6 +95,7 @@ fun ProductDetailsRoute(
                                 }
                             }
                         }
+                        else -> {}
                     }
                 }
                 is OpenBottomSheet -> {

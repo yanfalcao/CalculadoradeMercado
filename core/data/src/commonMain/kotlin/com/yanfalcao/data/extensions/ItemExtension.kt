@@ -7,6 +7,7 @@ import com.yanfalcao.model.ItemSimple
 import com.yanfalcao.model.util.Length
 import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.Measure
+import com.yanfalcao.model.util.Volume
 
 fun ItemSimple.toEntity(cartId: String): ItemSimpleEntity {
     return ItemSimpleEntity(
@@ -46,6 +47,7 @@ fun ItemComparisonEntity.toModel(entity: String): ItemComparison {
         when {
             Length.isUnit(entity) -> Length.getUnit(this.baseUnit)
             Mass.isUnit(entity) -> Mass.getUnit(this.baseUnit)
+            Volume.isUnit(entity) -> Volume.getUnit(this.baseUnit)
             else -> Length.meters
         }
     } catch (e: IllegalArgumentException) {

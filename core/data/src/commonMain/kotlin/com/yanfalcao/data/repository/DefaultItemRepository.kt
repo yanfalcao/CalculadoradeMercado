@@ -14,4 +14,8 @@ class DefaultItemRepository(
     override fun createItem(itemComparison: ItemComparison, productId: String) {
         itemComparisonDao.insert(itemComparison.toEntity(productId))
     }
+
+    override fun deleteItem(itemComparison: ItemComparison, productId: String) {
+        itemComparisonDao.delete(itemComparison.toEntity(productId = productId))
+    }
 }

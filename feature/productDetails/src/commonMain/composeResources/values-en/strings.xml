@@ -10,7 +10,7 @@
     <string name="cd_back_button">Back</string>
     <string name="empty_list_title">Add items</string>
     <string name="empty_list">Let's compare to save</string>
-    <string name="snackbar_delete">Comparative deleted</string>
+    <string name="snackbar_delete">Item deleted</string>
     <string name="options">Options</string>
     <string name="cd_options">Open action options</string>
     <string name="save">Save</string>

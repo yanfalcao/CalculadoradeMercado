@@ -1,11 +1,13 @@
 package com.yanfalcao.productDetails.state
 
 import com.yanfalcao.designsystem.util.Validation
+import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
 import com.yanfalcao.model.util.BaseUnits
 
 data class ProductDetailsVS(
     val product: Product,
+    val deletedItens: MutableList<ItemComparison> = mutableListOf(),
     val undoQueue: MutableList<ProductDetailsIntent> = mutableListOf(),
     val amountComparison: String = product.measureComparison.amountFormatted(),
     val itemId: String? = null,

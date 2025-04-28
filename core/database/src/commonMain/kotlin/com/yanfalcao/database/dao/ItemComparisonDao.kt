@@ -1,6 +1,7 @@
 package com.yanfalcao.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,6 +16,9 @@ interface ItemComparisonDao {
 
     @Update
     fun update(vararg item: ItemComparisonEntity)
+
+    @Delete
+    fun delete(item: ItemComparisonEntity)
 
     @Transaction
     @Query("SELECT * FROM item_comparison")

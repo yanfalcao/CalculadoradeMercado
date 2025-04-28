@@ -10,7 +10,7 @@
     <string name="cd_back_button">Voltar</string>
     <string name="empty_list_title">Adicione itens</string>
     <string name="empty_list">Vamos comparar para economizar</string>
-    <string name="snackbar_delete">Comparativo deletado</string>
+    <string name="snackbar_delete">Item deletado</string>
     <string name="options">Opções</string>
     <string name="cd_options">Abra opções de ação</string>
     <string name="save">Salvar</string>

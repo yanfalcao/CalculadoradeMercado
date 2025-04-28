@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yanfalcao.data.repository.ItemRepository
 import com.yanfalcao.data.repository.ProductRepository
+import com.yanfalcao.designsystem.util.EnumSnackEvent
 import com.yanfalcao.designsystem.util.EventManager
+import com.yanfalcao.designsystem.util.EventManager.AppEvent.ShowSnackbar
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
 import com.yanfalcao.model.extension.moneyStringFormat
@@ -35,9 +37,9 @@ class ProductDetailsVM(
         when (intent) {
             is ProductDetailsIntent.LoadProduct -> loadProduct(intent.productId)
             is ProductDetailsIntent.SaveProduct -> saveProduct()
-            is ProductDetailsIntent.UndoAction -> TODO()
-            is ProductDetailsIntent.RemoveLastUndo -> TODO()
-            is ProductDetailsIntent.RemoveItem -> TODO()
+            is ProductDetailsIntent.UndoAction -> undoAction()
+            is ProductDetailsIntent.RemoveLastUndo -> removeLastUndo()
+            is ProductDetailsIntent.RemoveItem -> removeItem(intent.item)
             is ProductDetailsIntent.EditProduct -> editProduct(intent.state)
             is ProductDetailsIntent.EditItem -> editItem(intent.state)
             is ProductDetailsIntent.UpgradeItem -> updateItem()
@@ -57,6 +59,11 @@ class ProductDetailsVM(
                     productRepository.saveProduct(product)
                 } else {
                     productRepository.updateProduct(product)
+
+                    val deletedItens = _productViewState.value.deletedItens
+                    deletedItens.forEach {
+                        itemRepository.deleteItem(it, productId)
+                    }
                 }
 
                 EventManager.triggerEvent(EventManager.AppEvent.CloseScreen)
@@ -78,6 +85,64 @@ class ProductDetailsVM(
                     )
                 }
             }
+        }
+    }
+
+    private fun undoAction() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val undoQueue = _productViewState.value.undoQueue
+            if(undoQueue.isNotEmpty()) {
+                val last = undoQueue.removeLast()
+                when (last) {
+                    is ProductDetailsIntent.UpgradeItem -> {
+                        val deletedItens = _productViewState.value.deletedItens
+                        if (deletedItens.isNotEmpty()) {
+                            val item = deletedItens.removeLast()
+                            _productViewState.value = _productViewState.value.copy(
+                                product = _productViewState.value.product.copy(
+                                    itens = _productViewState.value.product.itens + item
+                                ),
+                                deletedItens = deletedItens,
+                            )
+                        }
+                    }
+                    else -> {handleIntent(last)}
+                }
+
+            }
+        }
+    }
+
+    private fun removeLastUndo() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val undoQueue = _productViewState.value.undoQueue
+            if (undoQueue.isNotEmpty()) {
+                undoQueue.removeLast()
+            }
+        }
+    }
+
+    private fun removeItem(itemComparison: ItemComparison) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val product = _productViewState.value.product
+            val filteredItens = product.itens.filter {
+                it.id != itemComparison.id
+            }
+            val deletedItens = _productViewState.value.deletedItens
+            deletedItens.add(itemComparison)
+
+            _productViewState.value = _productViewState.value.copy(
+                deletedItens = deletedItens,
+                product = product.copy(
+                    itens = filteredItens,
+                )
+            )
+
+            _productViewState.value.undoQueue.add(
+                ProductDetailsIntent.UpgradeItem
+            )
+
+            EventManager.triggerEvent(ShowSnackbar(EnumSnackEvent.DELETE_ITEM))
         }
     }
 
@@ -112,18 +177,22 @@ class ProductDetailsVM(
         viewModelScope.launch(Dispatchers.IO) {
             val state = _productViewState.value
             val itemId = state.itemId
+            // Find the item in the list of items, if not found, create a new one
             var itemComparison = if(itemId != null) {
                 state.product.itens.find { it.id == itemId } ?: ItemComparison()
             } else {
                 ItemComparison()
             }
+            // Get the store from the state, if it's empty, format to null
             val store = state.itemStore.ifEmpty { null }
 
+            // Validate the item fields, if valid, create or update the item. Else, screen handle the error
             if(state.isItemBrandValid()
                 && state.isItemBrandValid()
                 && state.isItemAmountValid()
                 && state.isItemPriceValid()
             ) {
+                // Format the item fields to the correct types
                 itemComparison = itemComparison.copy(
                     totalPrice = state.itemPrice.replace(",", ".").toFloat(),
                     amount = state.itemAmount.replace(",", ".").toDouble().toInt(),
@@ -135,6 +204,7 @@ class ProductDetailsVM(
                     )
                 )
 
+                // If the itemId is null, create a new item. Else, update the item
                 if(itemId.isNullOrEmpty()) {
                     _productViewState.value = _productViewState.value.copy(
                         product = _productViewState.value.product.copy(
@@ -153,6 +223,7 @@ class ProductDetailsVM(
 
                 closeItem()
             } else {
+                // If the item fields are not valid, set the checkItemFormat to true
                 _productViewState.value = _productViewState.value.copy(
                     checkItemFormat = true
                 )
