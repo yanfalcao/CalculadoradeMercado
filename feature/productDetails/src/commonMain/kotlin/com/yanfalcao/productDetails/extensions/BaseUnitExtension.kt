@@ -22,6 +22,7 @@ import calculadorademercado.feature.productdetails.generated.resources.volume_li
 import calculadorademercado.feature.productdetails.generated.resources.volume_milliliter
 import calculadorademercado.feature.productdetails.generated.resources.volume_pint
 import com.yanfalcao.model.util.BaseUnits
+import com.yanfalcao.model.util.EntityUnit
 import com.yanfalcao.model.util.Length
 import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.Volume
@@ -30,21 +31,17 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BaseUnits.getDropItem(): DropdownItem {
-    return when (this) {
-        is Mass -> DropdownItem(
-            name = stringResource(Res.string.mass),
-            baseUnit = this
-        )
-        is Volume -> DropdownItem(
-            name = stringResource(Res.string.volume),
-            baseUnit = this
-        )
-        is Length -> DropdownItem(
+    return when (this.getEntityUnit()) {
+        EntityUnit.Length -> DropdownItem(
             name = stringResource(Res.string.length),
             baseUnit = this
         )
-        else -> DropdownItem(
+        EntityUnit.Mass -> DropdownItem(
             name = stringResource(Res.string.mass),
+            baseUnit = this
+        )
+        EntityUnit.Volume -> DropdownItem(
+            name = stringResource(Res.string.volume),
             baseUnit = this
         )
     }
@@ -84,21 +81,19 @@ fun BaseUnits.entitiesToDropdownItem(): List<DropdownItem> {
 
 @Composable
 fun BaseUnits.getBaseUnitDropItem(): DropdownItem {
-    return when(this) {
-        is Mass -> massUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
-        is Volume -> volumeUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
-        is Length -> lengthUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
-        else -> massUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
+    return when(this.getEntityUnit()) {
+        EntityUnit.Mass -> massUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
+        EntityUnit.Volume -> volumeUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
+        EntityUnit.Length -> lengthUnitsToDropdwnItem().filter { it.baseUnit == this }.first()
     }
 }
 
 @Composable
 fun BaseUnits.baseUnitsToDropdownItem(): List<DropdownItem> {
-    return when(this) {
-        is Mass -> massUnitsToDropdwnItem()
-        is Volume -> volumeUnitsToDropdwnItem()
-        is Length -> lengthUnitsToDropdwnItem()
-        else -> massUnitsToDropdwnItem()
+    return when(this.getEntityUnit()) {
+        EntityUnit.Mass -> massUnitsToDropdwnItem()
+        EntityUnit.Volume -> volumeUnitsToDropdwnItem()
+        EntityUnit.Length -> lengthUnitsToDropdwnItem()
     }
 }
 

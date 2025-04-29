@@ -81,7 +81,8 @@ class ProductDetailsVM(
                 productRepository.findProductById(productId).collect { product ->
                     _productViewState.value = _productViewState.value.copy(
                         product = product,
-                        amountComparison = product.measureComparison.amountFormatted()
+                        amountComparison = product.measureComparison.amountFormatted(),
+                        itemBaseUnit = product.measureComparison.units,
                     )
                 }
             }

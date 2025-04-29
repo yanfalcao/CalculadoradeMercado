@@ -11,7 +11,22 @@ abstract class BaseUnits(
     val abbreviation: String,
     val ratio: Double = 1.0
 ) {
+    companion object {
+        fun getEntityUnit(entity: String): EntityUnit {
+            return when {
+                Length.isUnit(entity) -> EntityUnit.Length
+                Mass.isUnit(entity) -> EntityUnit.Mass
+                Volume.isUnit(entity) -> EntityUnit.Volume
+                else -> EntityUnit.Length
+            }
+        }
+    }
+
     fun entityName(): String = this::class.simpleName!!
+
+    fun getEntityUnit(): EntityUnit {
+        return Companion.getEntityUnit(entityName())
+    }
 }
 
 interface BaseUnitUtil {

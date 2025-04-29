@@ -3,6 +3,8 @@ package com.yanfalcao.data.extensions
 import com.yanfalcao.database.model.ProductEntity
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
+import com.yanfalcao.model.util.BaseUnits
+import com.yanfalcao.model.util.EntityUnit
 import com.yanfalcao.model.util.Length
 import com.yanfalcao.model.util.Mass
 import com.yanfalcao.model.util.Measure
@@ -22,11 +24,10 @@ fun Product.toEntity(): ProductEntity {
 
 fun ProductEntity.toModel(itens: List<ItemComparison>): Product {
     val baseUnits = try {
-        when {
-            Length.isUnit(this.entity) -> Length.getUnit(this.baseUnit)
-            Mass.isUnit(this.entity) -> Mass.getUnit(this.baseUnit)
-            Volume.isUnit(this.entity) -> Volume.getUnit(this.baseUnit)
-            else -> Length.meters
+        when(BaseUnits.getEntityUnit(entity)) {
+            EntityUnit.Length -> Length.getUnit(this.baseUnit)
+            EntityUnit.Mass -> Mass.getUnit(this.baseUnit)
+            EntityUnit.Volume -> Volume.getUnit(this.baseUnit)
         }
     } catch (e: IllegalArgumentException) {
         Length.meters
