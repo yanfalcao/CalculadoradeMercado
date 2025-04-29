@@ -12,18 +12,18 @@ import com.yanfalcao.database.model.ItemComparisonEntity
 @Dao
 interface ItemComparisonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg item: ItemComparisonEntity)
+    suspend fun insert(vararg item: ItemComparisonEntity)
 
     @Update
-    fun update(vararg item: ItemComparisonEntity)
+    suspend fun update(vararg item: ItemComparisonEntity)
 
     @Delete
-    fun delete(item: ItemComparisonEntity)
+    suspend fun delete(item: ItemComparisonEntity)
 
     @Transaction
     @Query("SELECT * FROM item_comparison")
-    fun findAll(): List<ItemComparisonEntity>
+    suspend fun findAll(): List<ItemComparisonEntity>
 
     @Query("DELETE FROM item_comparison WHERE product_id = :productId")
-    fun deleteByProductId(productId: String): Int
+    suspend fun deleteByProductId(productId: String): Int
 }

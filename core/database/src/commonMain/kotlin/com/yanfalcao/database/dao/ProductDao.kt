@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(recipe: ProductEntity): Long
+    suspend fun insert(recipe: ProductEntity): Long
 
     @Update
-    fun update(recipe: ProductEntity): Int
+    suspend fun update(recipe: ProductEntity): Int
 
     @Transaction
     @Query("SELECT * FROM product ORDER BY created_at DESC")
@@ -29,8 +29,8 @@ interface ProductDao {
 
     @Transaction
     @Query("SELECT * FROM product WHERE name LIKE '%' || :name || '%' ORDER BY created_at DESC")
-    fun findByName(name: String): List<ProductRelation>
+    suspend fun findByName(name: String): List<ProductRelation>
 
     @Delete
-    fun delete(product: ProductEntity)
+    suspend fun delete(product: ProductEntity)
 }

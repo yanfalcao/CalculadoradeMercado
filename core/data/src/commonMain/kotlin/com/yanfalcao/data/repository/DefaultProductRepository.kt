@@ -29,7 +29,7 @@ internal class DefaultProductRepository(
             }
     }
 
-    override fun findProductsByName(name: String): List<Product> {
+    override suspend fun findProductsByName(name: String): List<Product> {
         return productDao.findByName(name)
             .map { productRelationList ->
                 val itemList = mapToItemComparisonList(productRelationList)
@@ -37,7 +37,7 @@ internal class DefaultProductRepository(
             }
     }
 
-    override fun saveProduct(product: Product) {
+    override suspend fun saveProduct(product: Product) {
         product.itens
             .map { item ->
                 item.toEntity(productId = product.id)
@@ -49,12 +49,12 @@ internal class DefaultProductRepository(
         productDao.insert(product.toEntity())
     }
 
-    override fun removeProduct(product: Product) {
+    override suspend fun removeProduct(product: Product) {
         itemComparisonDao.deleteByProductId(product.id)
         productDao.delete(product.toEntity())
     }
 
-    override fun updateProduct(product: Product) {
+    override suspend fun updateProduct(product: Product) {
         product.itens
             .map { item ->
                 item.toEntity(productId = product.id)

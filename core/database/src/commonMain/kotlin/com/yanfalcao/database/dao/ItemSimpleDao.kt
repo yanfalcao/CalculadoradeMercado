@@ -10,12 +10,12 @@ import com.yanfalcao.database.model.ItemSimpleEntity
 @Dao
 interface ItemSimpleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg item: ItemSimpleEntity)
+    suspend fun insert(vararg item: ItemSimpleEntity)
 
     @Transaction
     @Query("SELECT * FROM item_simple")
-    fun findAll(): List<ItemSimpleEntity>
+    suspend fun findAll(): List<ItemSimpleEntity>
 
     @Query("DELETE FROM item_simple WHERE cart_id = :cartId")
-    fun deleteByCartId(cartId: String): Int
+    suspend fun deleteByCartId(cartId: String): Int
 }

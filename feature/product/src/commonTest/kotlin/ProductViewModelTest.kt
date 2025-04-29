@@ -10,9 +10,11 @@ import com.yanfalcao.product.state.ProductIntent
 import dev.mokkery.answering.calls
 import dev.mokkery.answering.returns
 import dev.mokkery.every
+import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verify
+import dev.mokkery.verifySuspend
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -101,7 +103,7 @@ class ProductViewModelTest {
 
         viewModel.productViewState.test {
             every { repository.findProducts() } returns productFlow
-            every { repository.removeProduct(any()) } calls {
+            everySuspend { repository.removeProduct(any()) } calls {
                 productFlow.value = listOf(product2.copy())
             }
 
@@ -113,7 +115,7 @@ class ProductViewModelTest {
 
             viewModel.handleIntent(ProductIntent.RemoveProduct(product1))
 
-            verify { repository.removeProduct(product1) }
+            verifySuspend { repository.removeProduct(product1) }
 
             assertEquals(1, awaitItem().products.size)
         }
@@ -124,7 +126,7 @@ class ProductViewModelTest {
         viewModel = ProductViewModel(repository)
 
         viewModel.productViewState.test {
-            every { repository.findProductsByName("Café") } returns listOf(product1)
+            everySuspend { repository.findProductsByName("Café") } returns listOf(product1)
 
             assertTrue(awaitItem().isLoading)
 
@@ -132,7 +134,7 @@ class ProductViewModelTest {
 
             val state = awaitItem()
 
-            verify { repository.findProductsByName("Café") }
+            verifySuspend { repository.findProductsByName("Café") }
             assertEquals(1, state.products.size)
             assertEquals("Café", state.products[0].name)
         }
@@ -145,7 +147,7 @@ class ProductViewModelTest {
 
         viewModel.productViewState.test {
             every { repository.findProducts() } returns productFlow
-            every { repository.saveProduct(any()) } calls {
+            everySuspend { repository.saveProduct(any()) } calls {
                 productFlow.value = listOf(product1.copy(), product2.copy())
             }
 
@@ -157,7 +159,7 @@ class ProductViewModelTest {
 
             viewModel.handleIntent(ProductIntent.CreateProduct(product1))
 
-            verify { repository.saveProduct(product1) }
+            verifySuspend { repository.saveProduct(product1) }
 
             assertEquals(2, awaitItem().products.size)
         }
@@ -168,15 +170,15 @@ class ProductViewModelTest {
         viewModel = ProductViewModel(repository)
 
         viewModel.productViewState.test {
-            every { repository.removeProduct(any()) } calls {}
-            every { repository.saveProduct(any()) } calls {}
+            everySuspend { repository.removeProduct(any()) } calls {}
+            everySuspend { repository.saveProduct(any()) } calls {}
 
             assertTrue(awaitItem().isLoading)
 
             viewModel.handleIntent(ProductIntent.RemoveProduct(product1))
             viewModel.handleIntent(ProductIntent.UndoAction)
 
-            verify { repository.saveProduct(product1) }
+            verifySuspend { repository.saveProduct(product1) }
         }
     }
 }
