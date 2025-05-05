@@ -2,6 +2,7 @@ package org.yanfalcao.calculadorademercado.di
 
 import com.yanfalcao.data.di.dataModule
 import com.yanfalcao.database.di.databaseModule
+import com.yanfalcao.database.di.plataformModule
 import com.yanfalcao.product.di.productModule
 import com.yanfalcao.productDetails.di.productDetailsModule
 import org.koin.core.context.startKoin
@@ -13,6 +14,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
         modules(
             productModule,
             productDetailsModule,
+            plataformModule(),
             databaseModule,
             dataModule
         )

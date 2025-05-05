@@ -13,7 +13,6 @@ val databaseModule = module {
     single<ItemComparisonDao> { get<AppDatabase>().itemComparisonDao() }
     single<ItemSimpleDao> { get<AppDatabase>().itemSimpleDao() }
     single<ProductDao> { get<AppDatabase>().productDao() }
-    includes(plataformModule())
 }
 
 expect fun plataformModule(): Module

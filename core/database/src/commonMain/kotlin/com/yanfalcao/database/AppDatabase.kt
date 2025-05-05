@@ -1,5 +1,6 @@
 package com.yanfalcao.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
@@ -21,6 +22,7 @@ import com.yanfalcao.database.model.ProductEntity
         ItemSimpleEntity::class,
     ]
 )
+@ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun cartDao(): CartDao
