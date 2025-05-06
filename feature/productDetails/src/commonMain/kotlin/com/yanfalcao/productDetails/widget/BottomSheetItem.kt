@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomSheetDefaults
@@ -24,6 +26,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.productdetails.generated.resources.Res
@@ -70,176 +73,204 @@ private fun BottomSheetBody(
     state: ProductDetailsVS,
     handleIntent: (ProductDetailsIntent) -> Unit,
 ) {
-    Column(
+    val lazyListState = rememberLazyListState()
+
+    if (lazyListState.isScrollInProgress) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        keyboardController?.hide()
+    }
+
+    LazyColumn (
+        state = lazyListState,
         modifier =
         Modifier
             .safeDrawingPadding()
             .padding(start = 15.dp, end = 15.dp, bottom = 15.dp),
         horizontalAlignment = Alignment.Start,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.brand),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InputDisplayField(
-                    label = stringResource(Res.string.placeholder),
-                    onChange = { text ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemBrand = text)
-                        ))
-                    },
-                    textState = state.itemBrand,
-                    checkFormat = state.checkItemFormat
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.store),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InputDisplayField(
-                    label = stringResource(Res.string.placeholder),
-                    onChange = { text ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemStore = text)
-                        ))
-                    },
-                    textState = state.itemStore,
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.price),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                NumberInputField(
-                    prefix = "R$",
-                    label = "",
-                    onChange = { text ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemPrice = text)
-                        ))
-                    },
-                    textState = state.itemPrice,
-                    checkFormat = state.checkItemFormat
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.amount),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InputDisplayField(
-                    label = stringResource(Res.string.placeholder),
-                    onChange = { text ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemAmount = text)
-                        ))
-                    },
-                    textState = state.itemAmount,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    checkFormat = state.checkItemFormat
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.unit),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                DropdownField(
-                    modifier = Modifier.height(50.dp),
-                    defaultItem = state.itemBaseUnit.getBaseUnitDropItem(),
-                    itemList = state.itemBaseUnit.baseUnitsToDropdownItem(),
-                    onUpdate = { item ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemBaseUnit = item.baseUnit)
-                        ))
-                    }
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    stringResource(Res.string.measure_amount),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InputDisplayField(
-                    label = "",
-                    posfix = state.itemBaseUnit.abbreviation,
-                    onChange = { text ->
-                        handleIntent(ProductDetailsIntent.EditItem(
-                            state.copy(itemAmountComparison = text)
-                        ))
-                    },
-                    textState = state.itemAmountComparison,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    checkFormat = state.checkItemFormat
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Button(
-                onClick = { handleIntent(ProductDetailsIntent.CloseItemEdit) },
-                modifier = Modifier.weight(1f).height(50.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                )
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    stringResource(Res.string.cancel),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.brand),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    InputDisplayField(
+                        label = stringResource(Res.string.placeholder),
+                        onChange = { text ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemBrand = text)
+                                )
+                            )
+                        },
+                        textState = state.itemBrand,
+                        checkFormat = state.checkItemFormat
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.store),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    InputDisplayField(
+                        label = stringResource(Res.string.placeholder),
+                        onChange = { text ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemStore = text)
+                                )
+                            )
+                        },
+                        textState = state.itemStore,
+                    )
+                }
             }
-            Button(
-                onClick = { handleIntent(ProductDetailsIntent.UpgradeItem) },
-                modifier = Modifier.weight(1f).height(50.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    stringResource(Res.string.save),
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.price),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    NumberInputField(
+                        prefix = "R$",
+                        label = "",
+                        onChange = { text ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemPrice = text)
+                                )
+                            )
+                        },
+                        textState = state.itemPrice,
+                        checkFormat = state.checkItemFormat
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.amount),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    InputDisplayField(
+                        label = stringResource(Res.string.placeholder),
+                        onChange = { text ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemAmount = text)
+                                )
+                            )
+                        },
+                        textState = state.itemAmount,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        checkFormat = state.checkItemFormat
+                    )
+                }
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.unit),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    DropdownField(
+                        modifier = Modifier.height(50.dp),
+                        defaultItem = state.itemBaseUnit.getBaseUnitDropItem(),
+                        itemList = state.itemBaseUnit.baseUnitsToDropdownItem(),
+                        onUpdate = { item ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemBaseUnit = item.baseUnit)
+                                )
+                            )
+                        }
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(Res.string.measure_amount),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    InputDisplayField(
+                        label = "",
+                        posfix = state.itemBaseUnit.abbreviation,
+                        onChange = { text ->
+                            handleIntent(
+                                ProductDetailsIntent.EditItem(
+                                    state.copy(itemAmountComparison = text)
+                                )
+                            )
+                        },
+                        textState = state.itemAmountComparison,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
+                        checkFormat = state.checkItemFormat
+                    )
+                }
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    onClick = { handleIntent(ProductDetailsIntent.CloseItemEdit) },
+                    modifier = Modifier.weight(1f).height(50.dp),
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                ) {
+                    Text(
+                        stringResource(Res.string.cancel),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Button(
+                    onClick = { handleIntent(ProductDetailsIntent.UpgradeItem) },
+                    modifier = Modifier.weight(1f).height(50.dp),
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        stringResource(Res.string.save),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
         }
     }

@@ -2,6 +2,8 @@
 
 package com.yanfalcao.productDetails
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -24,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import calculadorademercado.feature.productdetails.generated.resources.Res
 import calculadorademercado.feature.productdetails.generated.resources.add_item
@@ -129,6 +133,12 @@ fun ProductDetailsScreen(
     handleIntent: (ProductDetailsIntent) -> Unit,
     onBack: () -> Unit,
 ) {
+    val lazyListState = rememberLazyListState()
+
+    if (lazyListState.isScrollInProgress) {
+        val keyboardController = LocalSoftwareKeyboardController.current
+        keyboardController?.hide()
+    }
 
     if (showSheet) {
         BottomSheetItem(
@@ -170,6 +180,7 @@ fun ProductDetailsScreen(
         }
     ) { padding ->
         LazyColumn (
+            state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
