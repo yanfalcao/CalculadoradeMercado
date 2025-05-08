@@ -24,11 +24,6 @@ sealed class ProductDetailsIntent {
     data class EditProduct(val state: ProductDetailsVS) : ProductDetailsIntent()
 
     /***
-     * Edit item fields state, without worry about if is valid or not
-     */
-    data class EditItem(val state: ProductDetailsVS) : ProductDetailsIntent()
-
-    /***
      * Edit the item fields, if all are valid, save the item in a temporary object.
      *  Else the screen handle the error
      */

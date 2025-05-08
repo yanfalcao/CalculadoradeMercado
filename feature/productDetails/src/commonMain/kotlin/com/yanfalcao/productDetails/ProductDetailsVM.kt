@@ -1,5 +1,7 @@
 package com.yanfalcao.productDetails
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yanfalcao.data.repository.ItemRepository
@@ -7,6 +9,7 @@ import com.yanfalcao.data.repository.ProductRepository
 import com.yanfalcao.designsystem.util.EnumSnackEvent
 import com.yanfalcao.designsystem.util.EventManager
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.ShowSnackbar
+import com.yanfalcao.designsystem.util.Validation
 import com.yanfalcao.model.ItemComparison
 import com.yanfalcao.model.Product
 import com.yanfalcao.model.extension.moneyStringFormat
@@ -29,6 +32,15 @@ class ProductDetailsVM(
     ))
     val productViewState: StateFlow<ProductDetailsVS> = _productViewState
 
+    val itemId: MutableState<String?> = mutableStateOf(null)
+    val itemPrice = mutableStateOf("")
+    val itemAmount = mutableStateOf("")
+    val itemBrand = mutableStateOf("")
+    val itemStore = mutableStateOf("")
+    val itemBaseUnit = mutableStateOf(Product().measureComparison.units)
+    val itemAmountComparison = mutableStateOf("")
+    val checkItemFormat = mutableStateOf(false)
+
     init {
         handleIntent(ProductDetailsIntent.LoadProduct(productId))
     }
@@ -41,7 +53,6 @@ class ProductDetailsVM(
             is ProductDetailsIntent.RemoveLastUndo -> removeLastUndo()
             is ProductDetailsIntent.RemoveItem -> removeItem(intent.item)
             is ProductDetailsIntent.EditProduct -> editProduct(intent.state)
-            is ProductDetailsIntent.EditItem -> editItem(intent.state)
             is ProductDetailsIntent.UpgradeItem -> updateItem()
             is ProductDetailsIntent.OpenItemToCreate -> openItem()
             is ProductDetailsIntent.OpenItemToEdit -> openItem(intent.item)
@@ -82,8 +93,8 @@ class ProductDetailsVM(
                     _productViewState.value = _productViewState.value.copy(
                         product = product,
                         amountComparison = product.measureComparison.amountFormatted(),
-                        itemBaseUnit = product.measureComparison.units,
                     )
+                    itemBaseUnit.value = product.measureComparison.units
                 }
             }
         }
@@ -147,12 +158,6 @@ class ProductDetailsVM(
         }
     }
 
-    private fun editItem(item: ProductDetailsVS) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _productViewState.value = item
-        }
-    }
-
     private fun editProduct(state: ProductDetailsVS) {
         viewModelScope.launch(Dispatchers.IO) {
             // Parse the amountComparison to Double, if it fails, use the default value
@@ -177,7 +182,7 @@ class ProductDetailsVM(
     private fun updateItem() {
         viewModelScope.launch(Dispatchers.IO) {
             val state = _productViewState.value
-            val itemId = state.itemId
+            val itemId = itemId.value
             // Find the item in the list of items, if not found, create a new one
             var itemComparison = if(itemId != null) {
                 state.product.itens.find { it.id == itemId } ?: ItemComparison()
@@ -185,23 +190,22 @@ class ProductDetailsVM(
                 ItemComparison()
             }
             // Get the store from the state, if it's empty, format to null
-            val store = state.itemStore.ifEmpty { null }
+            val store = itemStore.value.ifEmpty { null }
 
             // Validate the item fields, if valid, create or update the item. Else, screen handle the error
-            if(state.isItemBrandValid()
-                && state.isItemBrandValid()
-                && state.isItemAmountValid()
-                && state.isItemPriceValid()
+            if(Validation.validString(itemBrand.value)
+                && Validation.validNumber(itemAmount.value)
+                && Validation.validNumber(itemPrice.value)
             ) {
                 // Format the item fields to the correct types
                 itemComparison = itemComparison.copy(
-                    totalPrice = state.itemPrice.replace(",", ".").toFloat(),
-                    amount = state.itemAmount.replace(",", ".").toDouble().toInt(),
-                    brand = state.itemBrand,
+                    totalPrice = itemPrice.value.replace(",", ".").toFloat(),
+                    amount = itemAmount.value.replace(",", ".").toDouble().toInt(),
+                    brand = itemBrand.value,
                     store = store,
                     measure = Measure(
-                        state.itemAmountComparison.replace(",", ".").toDouble(),
-                        state.itemBaseUnit
+                        itemAmountComparison.value.replace(",", ".").toDouble(),
+                        itemBaseUnit.value
                     )
                 )
 
@@ -225,44 +229,36 @@ class ProductDetailsVM(
                 closeItem()
             } else {
                 // If the item fields are not valid, set the checkItemFormat to true
-                _productViewState.value = _productViewState.value.copy(
-                    checkItemFormat = true
-                )
+                checkItemFormat.value = true
             }
         }
     }
 
     private fun openItem(itemComparison: ItemComparison? = null) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if(itemComparison != null) {
-                _productViewState.value = _productViewState.value.copy(
-                    itemId = itemComparison.id,
-                    itemBrand = itemComparison.brand,
-                    itemPrice = itemComparison.totalPrice.toDouble().moneyStringFormat(),
-                    itemStore = itemComparison.store ?: "",
-                    itemAmount = itemComparison.amount.toString(),
-                    itemBaseUnit = itemComparison.measure.units,
-                    itemAmountComparison = itemComparison.measure.amountFormatted(),
-                    checkItemFormat = false,
-                )
-            }
-
-            EventManager.triggerEvent(EventManager.AppEvent.OpenBottomSheet)
+        if(itemComparison != null) {
+            itemId.value = itemComparison.id
+            itemBrand.value = itemComparison.brand
+            itemPrice.value = itemComparison.totalPrice.toDouble().moneyStringFormat()
+            itemStore.value = itemComparison.store ?: ""
+            itemAmount.value = itemComparison.amount.toString()
+            itemBaseUnit.value = itemComparison.measure.units
+            itemAmountComparison.value = itemComparison.measure.amountFormatted()
+            checkItemFormat.value = false
         }
+
+        EventManager.triggerEvent(EventManager.AppEvent.OpenBottomSheet)
     }
 
     private fun closeItem() {
         viewModelScope.launch(Dispatchers.IO) {
-            _productViewState.value = _productViewState.value.copy(
-                itemId = null,
-                itemBrand = "",
-                itemPrice = "",
-                itemStore = "",
-                itemAmount = "",
-                itemBaseUnit = _productViewState.value.product.measureComparison.units,
-                itemAmountComparison = "",
-                checkItemFormat = false,
-            )
+            itemId.value = null
+            itemBrand.value = ""
+            itemPrice.value = ""
+            itemStore.value = ""
+            itemAmount.value = ""
+            itemBaseUnit.value = _productViewState.value.product.measureComparison.units
+            itemAmountComparison.value = ""
+            checkItemFormat.value = false
 
             EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)
         }

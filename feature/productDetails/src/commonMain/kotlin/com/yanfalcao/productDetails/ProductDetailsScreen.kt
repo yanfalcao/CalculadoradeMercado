@@ -2,8 +2,6 @@
 
 package com.yanfalcao.productDetails
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +45,6 @@ import com.yanfalcao.designsystem.util.EventManager.AppEvent.OpenBottomSheet
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseBottomSheet
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseScreen
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
-import com.yanfalcao.productDetails.state.ProductDetailsVS
 import com.yanfalcao.productDetails.widget.ComparisonUnitSection
 import com.yanfalcao.designsystem.widget.CustomTopBar
 import com.yanfalcao.productDetails.widget.BottomSheetItem
@@ -70,8 +67,6 @@ fun ProductDetailsRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
-
-    val productViewState by viewModel.productViewState.collectAsState()
 
     val snackDeleteText = stringResource(Res.string.snackbar_delete)
     val undoLabelText = stringResource(Res.string.undo)
@@ -119,8 +114,7 @@ fun ProductDetailsRoute(
     ProductDetailsScreen(
         showSheet = showSheet,
         snackbarHostState = snackbarHostState,
-        state = productViewState,
-        handleIntent = viewModel::handleIntent,
+        viewModel = viewModel,
         onBack = onBackClick,
     )
 }
@@ -129,10 +123,11 @@ fun ProductDetailsRoute(
 fun ProductDetailsScreen(
     showSheet: Boolean,
     snackbarHostState: SnackbarHostState,
-    state: ProductDetailsVS,
-    handleIntent: (ProductDetailsIntent) -> Unit,
+
+    viewModel: ProductDetailsVM,
     onBack: () -> Unit,
 ) {
+    val state by viewModel.productViewState.collectAsState()
     val lazyListState = rememberLazyListState()
 
     if (lazyListState.isScrollInProgress) {
@@ -141,10 +136,7 @@ fun ProductDetailsScreen(
     }
 
     if (showSheet) {
-        BottomSheetItem(
-            state = state,
-            handleIntent = handleIntent,
-        )
+        BottomSheetItem(viewModel)
     }
 
     Scaffold(
@@ -164,13 +156,13 @@ fun ProductDetailsScreen(
                     icon = Res.drawable.ic_save,
                     text = stringResource(Res.string.save),
                     contentDescription = stringResource(Res.string.cd_save),
-                    onClick = { handleIntent(ProductDetailsIntent.SaveProduct) }
+                    onClick = { viewModel.handleIntent(ProductDetailsIntent.SaveProduct) }
                 ),
                 FABItem(
                     icon = Res.drawable.ic_tag,
                     text = stringResource(Res.string.add_item),
                     contentDescription = stringResource(Res.string.cd_add_item),
-                    onClick = { handleIntent(ProductDetailsIntent.OpenItemToCreate) }
+                    onClick = { viewModel.handleIntent(ProductDetailsIntent.OpenItemToCreate) }
                 ),
             )
 
@@ -191,7 +183,7 @@ fun ProductDetailsScreen(
             item {
                 ComparisonUnitSection(
                     state = state,
-                    handleIntent = handleIntent,
+                    handleIntent = viewModel::handleIntent,
                 )
             }
 
@@ -212,7 +204,7 @@ fun ProductDetailsScreen(
                         ProductComparisonCard(
                             item = itemComparison,
                             state = state,
-                            handleIntent = handleIntent,
+                            handleIntent = viewModel::handleIntent,
                         )
                     }
                 }

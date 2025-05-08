@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.yanfalcao.productDetails.widget
 
 import androidx.compose.foundation.background
@@ -23,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.yanfalcao.designsystem.util.Validation
+import kotlinx.coroutines.FlowPreview
 
 @Composable
 fun InputDisplayField(
@@ -34,19 +37,14 @@ fun InputDisplayField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     checkFormat: Boolean = false
 ) {
-    val inputText = remember { mutableStateOf("") }
     val outlineError = remember { mutableStateOf(false) }
-
-    if (textState.isNotEmpty()) {
-        inputText.value = textState
-    }
 
     outlineError.value = if(checkFormat) {
         when (keyboardOptions.keyboardType) {
-            KeyboardType.Number -> !Validation.validNumber(inputText.value)
-            KeyboardType.Decimal -> !Validation.validNumber(inputText.value)
-            KeyboardType.Unspecified -> !Validation.validString(inputText.value)
-            KeyboardType.Text -> !Validation.validString(inputText.value)
+            KeyboardType.Number -> !Validation.validNumber(textState)
+            KeyboardType.Decimal -> !Validation.validNumber(textState)
+            KeyboardType.Unspecified -> !Validation.validString(textState)
+            KeyboardType.Text -> !Validation.validString(textState)
             else -> false
         }
     } else {
@@ -59,11 +57,8 @@ fun InputDisplayField(
         MaterialTheme.colorScheme.surface
 
     BasicTextField(
-        value = inputText.value,
-        onValueChange = { newText ->
-            inputText.value = newText
-            onChange(newText)
-        },
+        value = textState,
+        onValueChange = { newText -> onChange(newText) },
         keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions.Default,
         modifier = modifier
@@ -87,7 +82,7 @@ fun InputDisplayField(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box {
-                    if (inputText.value.isEmpty()) {
+                    if (textState.isEmpty()) {
                         Text(
                             text = label ?: "",
                             maxLines = 1,

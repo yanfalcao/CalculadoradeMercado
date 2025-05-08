@@ -24,6 +24,8 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -39,16 +41,15 @@ import calculadorademercado.feature.productdetails.generated.resources.price
 import calculadorademercado.feature.productdetails.generated.resources.save
 import calculadorademercado.feature.productdetails.generated.resources.store
 import calculadorademercado.feature.productdetails.generated.resources.unit
+import com.yanfalcao.productDetails.ProductDetailsVM
 import com.yanfalcao.productDetails.extensions.baseUnitsToDropdownItem
 import com.yanfalcao.productDetails.extensions.getBaseUnitDropItem
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
-import com.yanfalcao.productDetails.state.ProductDetailsVS
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BottomSheetItem(
-    state: ProductDetailsVS,
-    handleIntent: (ProductDetailsIntent) -> Unit,
+    viewModel: ProductDetailsVM,
 ) {
     val modalBottomSheetState: SheetState =
         rememberModalBottomSheetState(
@@ -56,22 +57,20 @@ fun BottomSheetItem(
         )
 
     ModalBottomSheet(
-        onDismissRequest = { handleIntent(ProductDetailsIntent.CloseItemEdit) },
+        onDismissRequest = { viewModel.handleIntent(ProductDetailsIntent.CloseItemEdit) },
         sheetState = modalBottomSheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() },
         containerColor = MaterialTheme.colorScheme.background,
     ) {
         BottomSheetBody(
-            state = state,
-            handleIntent = handleIntent,
+            viewModel = viewModel,
         )
     }
 }
 
 @Composable
 private fun BottomSheetBody(
-    state: ProductDetailsVS,
-    handleIntent: (ProductDetailsIntent) -> Unit,
+    viewModel: ProductDetailsVM,
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -102,14 +101,10 @@ private fun BottomSheetBody(
                     InputDisplayField(
                         label = stringResource(Res.string.placeholder),
                         onChange = { text ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemBrand = text)
-                                )
-                            )
+                            viewModel.itemBrand.value = text
                         },
-                        textState = state.itemBrand,
-                        checkFormat = state.checkItemFormat
+                        textState = viewModel.itemBrand.value,
+                        checkFormat = viewModel.checkItemFormat.value
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -121,13 +116,9 @@ private fun BottomSheetBody(
                     InputDisplayField(
                         label = stringResource(Res.string.placeholder),
                         onChange = { text ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemStore = text)
-                                )
-                            )
+                            viewModel.itemStore.value = text
                         },
-                        textState = state.itemStore,
+                        textState = viewModel.itemStore.value,
                     )
                 }
             }
@@ -150,14 +141,10 @@ private fun BottomSheetBody(
                         prefix = "R$",
                         label = "",
                         onChange = { text ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemPrice = text)
-                                )
-                            )
+                            viewModel.itemPrice.value = text
                         },
-                        textState = state.itemPrice,
-                        checkFormat = state.checkItemFormat
+                        textState = viewModel.itemPrice.value,
+                        checkFormat = viewModel.checkItemFormat.value
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
@@ -169,17 +156,13 @@ private fun BottomSheetBody(
                     InputDisplayField(
                         label = stringResource(Res.string.placeholder),
                         onChange = { text ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemAmount = text)
-                                )
-                            )
+                            viewModel.itemAmount.value = text
                         },
-                        textState = state.itemAmount,
+                        textState = viewModel.itemAmount.value,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number
                         ),
-                        checkFormat = state.checkItemFormat
+                        checkFormat = viewModel.checkItemFormat.value
                     )
                 }
             }
@@ -200,14 +183,10 @@ private fun BottomSheetBody(
                     Spacer(modifier = Modifier.height(4.dp))
                     DropdownField(
                         modifier = Modifier.height(50.dp),
-                        defaultItem = state.itemBaseUnit.getBaseUnitDropItem(),
-                        itemList = state.itemBaseUnit.baseUnitsToDropdownItem(),
+                        defaultItem = viewModel.itemBaseUnit.value.getBaseUnitDropItem(),
+                        itemList = viewModel.itemBaseUnit.value.baseUnitsToDropdownItem(),
                         onUpdate = { item ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemBaseUnit = item.baseUnit)
-                                )
-                            )
+                            viewModel.itemBaseUnit.value = item.baseUnit
                         }
                     )
                 }
@@ -219,19 +198,15 @@ private fun BottomSheetBody(
                     Spacer(modifier = Modifier.height(4.dp))
                     InputDisplayField(
                         label = "",
-                        posfix = state.itemBaseUnit.abbreviation,
+                        posfix = viewModel.itemBaseUnit.value.abbreviation,
                         onChange = { text ->
-                            handleIntent(
-                                ProductDetailsIntent.EditItem(
-                                    state.copy(itemAmountComparison = text)
-                                )
-                            )
+                            viewModel.itemAmountComparison.value = text
                         },
-                        textState = state.itemAmountComparison,
+                        textState = viewModel.itemAmountComparison.value,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number
                         ),
-                        checkFormat = state.checkItemFormat
+                        checkFormat = viewModel.checkItemFormat.value
                     )
                 }
             }
@@ -245,7 +220,7 @@ private fun BottomSheetBody(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = { handleIntent(ProductDetailsIntent.CloseItemEdit) },
+                    onClick = { viewModel.handleIntent(ProductDetailsIntent.CloseItemEdit) },
                     modifier = Modifier.weight(1f).height(50.dp),
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(
@@ -259,7 +234,7 @@ private fun BottomSheetBody(
                     )
                 }
                 Button(
-                    onClick = { handleIntent(ProductDetailsIntent.UpgradeItem) },
+                    onClick = { viewModel.handleIntent(ProductDetailsIntent.UpgradeItem) },
                     modifier = Modifier.weight(1f).height(50.dp),
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(
