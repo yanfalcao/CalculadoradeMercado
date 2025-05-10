@@ -244,6 +244,8 @@ class ProductDetailsVM(
             itemBaseUnit.value = itemComparison.measure.units
             itemAmountComparison.value = itemComparison.measure.amountFormatted()
             checkItemFormat.value = false
+        } else {
+            itemBaseUnit.value = _productViewState.value.product.measureComparison.units
         }
 
         EventManager.triggerEvent(EventManager.AppEvent.OpenBottomSheet)
