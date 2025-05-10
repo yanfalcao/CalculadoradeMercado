@@ -21,5 +21,7 @@ object EventManager {
         object OpenBottomSheet : AppEvent()
         object CloseBottomSheet : AppEvent()
         object CloseScreen : AppEvent()
+        object OpenConfirmationDialog : AppEvent()
+        object CloseConfirmationDialog : AppEvent()
     }
 }

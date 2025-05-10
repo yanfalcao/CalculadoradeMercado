@@ -36,4 +36,19 @@ data class ItemComparison(
     fun getPriceByAmountString(measureComparison: Measure<BaseUnits>): String {
         return getPriceByAmount(measureComparison).moneyStringFormat()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || this::class != other::class) return false
+
+        other as ItemComparison
+
+        if (id != other.id) return false
+        if (totalPrice != other.totalPrice) return false
+        if (amount != other.amount) return false
+        if (brand != other.brand) return false
+        if (store != other.store) return false
+        if (!measure.equals(other.measure)) return false
+
+        return true
+    }
 }

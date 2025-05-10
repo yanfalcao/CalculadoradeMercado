@@ -23,8 +23,8 @@ class Measure<T: BaseUnits>(val amount: Double, val units: T): Comparable<Measur
     override fun compareTo(other: Measure<T>): Int = (this `as` other.units).amount.compareTo(other.amount)
 
     fun amountFormatted(): String {
-        var text = amount.toString(2)
-        var decimals = text.split(".").lastOrNull() ?: ""
+        val text = amount.toString(2)
+        val decimals = text.split(".").lastOrNull() ?: ""
         return when(decimals) {
             "0" -> text.replace(".0", "")
             else -> text
@@ -33,13 +33,24 @@ class Measure<T: BaseUnits>(val amount: Double, val units: T): Comparable<Measur
 
     fun amountWithAbbreviation(): String {
         var text = amount.toString(2)
-        var decimals = text.split(".").lastOrNull() ?: ""
+        val decimals = text.split(".").lastOrNull() ?: ""
         text = when(decimals) {
             "0" -> text.replace(".0", "")
             else -> text
         }
 
         return text + units.abbreviation
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || this::class != other::class) return false
+
+        other as Measure<*>
+
+        if(amount != other.amount) return false
+        if(units::class != other.units::class) return false
+
+        return true
     }
 }
 

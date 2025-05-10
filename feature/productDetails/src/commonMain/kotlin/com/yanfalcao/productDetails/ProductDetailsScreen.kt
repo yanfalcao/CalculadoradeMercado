@@ -32,6 +32,8 @@ import calculadorademercado.feature.productdetails.generated.resources.add_item
 import calculadorademercado.feature.productdetails.generated.resources.cd_add_item
 import calculadorademercado.feature.productdetails.generated.resources.cd_back_button
 import calculadorademercado.feature.productdetails.generated.resources.cd_save
+import calculadorademercado.feature.productdetails.generated.resources.confirmation_dialog_message
+import calculadorademercado.feature.productdetails.generated.resources.confirmation_dialog_title
 import calculadorademercado.feature.productdetails.generated.resources.ic_save
 import calculadorademercado.feature.productdetails.generated.resources.ic_tag
 import calculadorademercado.feature.productdetails.generated.resources.product
@@ -44,6 +46,9 @@ import com.yanfalcao.designsystem.util.EventManager.AppEvent.ShowSnackbar
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.OpenBottomSheet
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseBottomSheet
 import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseScreen
+import com.yanfalcao.designsystem.util.EventManager.AppEvent.OpenConfirmationDialog
+import com.yanfalcao.designsystem.util.EventManager.AppEvent.CloseConfirmationDialog
+import com.yanfalcao.designsystem.widget.ConfirmationDialog
 import com.yanfalcao.productDetails.state.ProductDetailsIntent
 import com.yanfalcao.productDetails.widget.ComparisonUnitSection
 import com.yanfalcao.designsystem.widget.CustomTopBar
@@ -67,6 +72,7 @@ fun ProductDetailsRoute(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
+    var showConfirmChanges by remember { mutableStateOf(false) }
 
     val snackDeleteText = stringResource(Res.string.snackbar_delete)
     val undoLabelText = stringResource(Res.string.undo)
@@ -106,6 +112,12 @@ fun ProductDetailsRoute(
                 is CloseScreen -> {
                     onBackClick()
                 }
+                is OpenConfirmationDialog -> {
+                    showConfirmChanges = true
+                }
+                is CloseConfirmationDialog -> {
+                    showConfirmChanges = false
+                }
                 else -> {}
             }
         }
@@ -113,6 +125,7 @@ fun ProductDetailsRoute(
 
     ProductDetailsScreen(
         showSheet = showSheet,
+        showConfirmChanges = showConfirmChanges,
         snackbarHostState = snackbarHostState,
         viewModel = viewModel,
         onBack = onBackClick,
@@ -122,8 +135,8 @@ fun ProductDetailsRoute(
 @Composable
 fun ProductDetailsScreen(
     showSheet: Boolean,
+    showConfirmChanges: Boolean,
     snackbarHostState: SnackbarHostState,
-
     viewModel: ProductDetailsVM,
     onBack: () -> Unit,
 ) {
@@ -133,6 +146,21 @@ fun ProductDetailsScreen(
     if (lazyListState.isScrollInProgress) {
         val keyboardController = LocalSoftwareKeyboardController.current
         keyboardController?.hide()
+    }
+
+    if (showConfirmChanges) {
+        ConfirmationDialog(
+            title = stringResource(Res.string.confirmation_dialog_title),
+            text = stringResource(Res.string.confirmation_dialog_message),
+            onConfirm = {
+                EventManager.triggerEvent(CloseConfirmationDialog)
+                viewModel.handleIntent(ProductDetailsIntent.SaveProduct)
+            },
+            onDismiss = {
+                EventManager.triggerEvent(CloseConfirmationDialog)
+                onBack()
+            }
+        )
     }
 
     if (showSheet) {
@@ -147,7 +175,7 @@ fun ProductDetailsScreen(
             CustomTopBar(
                 title = stringResource(Res.string.product),
                 contentDescription = stringResource(Res.string.cd_back_button),
-                onBack = onBack
+                onBack = { viewModel.handleIntent(ProductDetailsIntent.CloseScreen) }
             )
         },
         floatingActionButton = {

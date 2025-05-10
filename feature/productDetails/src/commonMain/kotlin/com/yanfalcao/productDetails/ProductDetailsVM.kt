@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class ProductDetailsVM(
@@ -57,6 +58,7 @@ class ProductDetailsVM(
             is ProductDetailsIntent.OpenItemToCreate -> openItem()
             is ProductDetailsIntent.OpenItemToEdit -> openItem(intent.item)
             is ProductDetailsIntent.CloseItemEdit -> closeItem()
+            is ProductDetailsIntent.CloseScreen -> closeScreen()
         }
     }
 
@@ -90,9 +92,11 @@ class ProductDetailsVM(
         viewModelScope.launch(Dispatchers.IO) {
             if(productId != null) {
                 productRepository.findProductById(productId).collect { product ->
-                    _productViewState.value = _productViewState.value.copy(
-                        product = product,
-                        amountComparison = product.measureComparison.amountFormatted(),
+                    _productViewState.emit(
+                        _productViewState.value.copy(
+                            product = product,
+                            amountComparison = product.measureComparison.amountFormatted(),
+                        )
                     )
                     itemBaseUnit.value = product.measureComparison.units
                 }
@@ -263,6 +267,24 @@ class ProductDetailsVM(
             checkItemFormat.value = false
 
             EventManager.triggerEvent(EventManager.AppEvent.CloseBottomSheet)
+        }
+    }
+
+    private fun closeScreen() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val actualProduct = _productViewState.value.product
+
+            val initialProduct = if (productId == null) {
+                Product()
+            } else {
+                productRepository.findProductById(productId).firstOrNull()
+            }
+
+            if (actualProduct.equals(initialProduct)) {
+                EventManager.triggerEvent(EventManager.AppEvent.CloseScreen)
+            } else {
+                EventManager.triggerEvent(EventManager.AppEvent.OpenConfirmationDialog)
+            }
         }
     }
 }

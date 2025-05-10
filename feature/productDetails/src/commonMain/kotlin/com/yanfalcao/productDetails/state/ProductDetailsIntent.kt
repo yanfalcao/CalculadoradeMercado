@@ -53,5 +53,8 @@ sealed class ProductDetailsIntent {
      * Undo the last action, as delete an item
      */
     object UndoAction : ProductDetailsIntent()
-
+    /***
+     * Verify any change before closing the screen to alert the user
+     */
+    object CloseScreen : ProductDetailsIntent()
 }

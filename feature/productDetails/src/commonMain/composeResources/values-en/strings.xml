@@ -28,6 +28,8 @@
     <string name="unit">Unit</string>
     <string name="measure_amount">Size</string>
     <string name="cancel">Cancel</string>
+    <string name="confirmation_dialog_title">There are changes!</string>
+    <string name="confirmation_dialog_message">Do you want to save the changes made to the comparison?</string>
 
     <string name="title_comparison_unit">Comparison Unit</string>
     <plurals name="items_quantity">

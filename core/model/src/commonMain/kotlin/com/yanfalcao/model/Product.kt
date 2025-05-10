@@ -60,4 +60,24 @@ data class Product(
 
         return adjustedList
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || this::class != other::class) return false
+
+        other as Product
+
+        if (id != other.id) return false
+        if (name != other.name) return false
+        if (!measureComparison.equals(other.measureComparison)) return false
+        if (itens.size != other.itens.size) return false
+
+        val isEquals = other.itens.all { areAnyItensEqualTo(it) }
+        if (!isEquals) return false
+
+        return true
+    }
+
+    private fun areAnyItensEqualTo(item: ItemComparison): Boolean {
+        return itens.any { it.equals(item) }
+    }
 }
